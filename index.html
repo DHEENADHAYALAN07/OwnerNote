@@ -727,6 +727,8 @@ footer{color:var(--ink-soft)}
 }
 body{background:var(--paper);color:var(--ink)}
 body::before{background:var(--paper)}
+.page,#app,footer{background:var(--paper)!important;color:var(--ink)}
+#app::before,.future-progress,.future-hud,.future-spotlight{display:none!important}
 .aurora i{opacity:.12;filter:blur(90px)}
 .grain{opacity:.08}
 .floor,.horizon{display:none}
@@ -801,6 +803,53 @@ body::before{background:var(--paper)}
 .band{background:var(--leaf);box-shadow:0 22px 44px -30px rgba(23,59,47,.45)}
 .owner-cursor,.owner-cursor-ring{display:none!important}
 body.custom-cursor,body.custom-cursor a,body.custom-cursor button{cursor:auto!important}
+:root{--paper:#fff}
+html,body{background:#fff!important}
+.aurora,.grain,.floor,.horizon{display:none!important}
+.intro,.page,#app,main,footer{background:#fff!important}
+main#app{background:#fff!important}
+.intro .brandmark{top:28px}
+.intro .replay{top:28px}
+#app{background:#fff!important;color:var(--ink)!important}
+#app::before,#app::after{display:none!important}
+#app .hero h2,#app .sec-head h3,#app .tile h4,#app .band h3{color:var(--ink)!important}
+#app .hero h2 span{background:none;color:var(--leaf);filter:none}
+#app .lede,#app .sec-head p,#app .tile p,#app .tile p.en{color:var(--ink-soft)!important}
+#app .tile{background:#fffdf8;border-color:#d8e2d8;box-shadow:var(--shadow);backdrop-filter:none;color:var(--ink)}
+#app .tile::before,#app .tile::after{display:none}
+#app .btn.ghost{color:var(--ink)!important;background:#fff;border-color:#d8e2d8}
+#app .facts li{color:var(--ink)!important;background:#e8f5e9;border:1px solid #b7d9be;border-radius:999px;padding:8px 13px;gap:8px}
+#app .facts li::before{width:10px;height:10px;box-shadow:none}
+#app .say{display:inline-flex;align-items:center;width:100%;box-sizing:border-box;min-height:44px;padding:11px 15px;color:#f5fff8!important;background:#173b2f;border:1px solid #2d604c;border-radius:12px;box-shadow:0 4px 10px rgba(23,59,47,.16);font-weight:600;font-style:normal}
+main#app .tile .say{color:#fff!important;background:#173b2f!important;border-color:#2d604c!important;box-shadow:0 4px 10px rgba(23,59,47,.16)!important}
+main#app .loan-world{background:#f5f1e8!important;color:var(--ink)!important;border-color:#d8e2d8!important;box-shadow:0 18px 36px -26px rgba(23,59,47,.25)!important}
+main#app .loan-world::before,main#app .loan-world::after{display:none!important}
+main#app .loan-topline{color:var(--leaf);background:#eef6ed;border-color:#d8e2d8}
+main#app .loan-copy h3{color:var(--ink)!important}
+main#app .loan-copy h3 span{color:var(--leaf)!important}
+main#app .loan-copy>p{color:var(--ink-soft)!important}
+main#app .line{background:#fffdf8!important;border:1px solid #d8e2d8!important;border-radius:14px;color:var(--ink);box-shadow:0 10px 24px -20px rgba(23,59,47,.3)}
+main#app .bubble{background:#e8f5e9!important;border-color:#b7d9be!important;color:var(--ink)!important}
+main#app .bubble small{color:var(--leaf)!important}
+main#app .reply{background:#173b2f!important;border-color:#2d604c!important;color:#fff!important}
+main#app .reply b{color:#bcebd0!important}
+main#app .band{background:#fffaf0!important;color:var(--ink)!important;border:1px solid #d8e2d8!important;box-shadow:0 18px 34px -24px rgba(23,59,47,.3)!important}
+main#app .band::before,main#app .band::after{display:none!important}
+main#app .band h3{color:var(--ink)!important}
+main#app .band p{color:var(--ink-soft)!important}
+main#app .band .btn.play{background:var(--leaf)!important;color:#fff!important;box-shadow:none}
+#app .faq{background:transparent;border:0;color:var(--ink);box-shadow:none}
+#app .faq details{background:#fffdf8;border:1px solid #d8e2d8;border-radius:14px;box-shadow:0 8px 20px -18px rgba(23,59,47,.3)}
+#app .contact{background:#fffdf8;border:1px solid #d8e2d8;border-radius:16px;color:var(--ink);box-shadow:0 12px 28px -22px rgba(23,59,47,.3)}
+#app .contact h4,#app .contact p{color:var(--ink)!important}
+#app .contact .mail{background:#f2f6ef;border-color:#d8e2d8;color:var(--ink)}
+#app .kai3d::after{color:var(--leaf)!important;text-shadow:none}
+#app .cf-item figcaption{color:var(--ink)!important}
+#app .cf-item figcaption span{color:var(--leaf)!important}
+#app .cf-nav button{color:var(--ink);background:#fff;border-color:#d8e2d8}
+#app .cf-dots button{background:#c9ddd1}
+#app .cf-dots button.active{background:var(--leaf);box-shadow:none}
+footer{background:#fff!important;color:var(--ink-soft)!important;border-top-color:#d8e2d8!important}
 
 </style>
 </head>
