@@ -778,10 +778,14 @@ body::before{background:var(--paper)}
 .mail button{background:var(--leaf);color:#fff}
 .loan-world{background:#fffaf0;color:var(--ink);border-color:#d8e2d8;border-radius:22px;box-shadow:0 18px 36px -26px rgba(23,59,47,.35)}
 .loan-world::before,.loan-world::after{display:none}
+.loan-world .eyebrow{color:var(--leaf)!important;background:#eef6ed;border-color:#d8e2d8}
+.loan-world .eyebrow i{background:var(--leaf)!important;box-shadow:0 0 8px rgba(24,114,79,.24)!important}
 .loan-copy h3{color:var(--ink);font-weight:700;letter-spacing:-.03em}
 .loan-copy h3 span{background:none;color:var(--leaf);filter:none;text-shadow:none}
 .loan-copy>p{color:var(--ink-soft)}
 .loan-points span{background:#f2f6ef;border-color:#d8e2d8;color:var(--ink)}
+.loan-points .loan-caption{position:static;display:inline-flex;align-items:center;margin:0;padding:8px 12px;border-radius:999px;transform:none;white-space:nowrap;box-shadow:none}
+.loan-points .loan-caption span{padding:0;border:0;background:transparent;color:inherit;font-size:inherit}
 .loan-metric{background:#fffdf8;border-color:#d8e2d8;box-shadow:none;backdrop-filter:none}
 .loan-metric::after{display:none}
 .loan-metric .metric-icon{background:#e2f1e5;border-color:#c5dfcc;color:var(--leaf)}
@@ -790,7 +794,8 @@ body::before{background:var(--paper)}
 .loan-coin{display:none}
 .loan-kai{filter:drop-shadow(0 12px 14px rgba(23,59,47,.2))}
 .cash-bundle{filter:drop-shadow(0 6px 8px rgba(23,59,47,.18))}
-.loan-caption{transform:none;box-shadow:none}
+.loan-copy > .loan-caption{position:static;display:inline-flex;margin:4px 0 18px;transform:none;white-space:nowrap;box-shadow:none}
+@media(max-width:760px){.loan-caption{left:4%;transform:none;white-space:normal}}
 .loan-orbit,.loan-spark,.cash-glint{display:none}
 .loan-caption{background:rgba(255,252,244,.92);color:var(--ink);border-color:#d8e2d8}
 .band{background:var(--leaf);box-shadow:0 22px 44px -30px rgba(23,59,47,.45)}
@@ -1010,7 +1015,7 @@ body.custom-cursor,body.custom-cursor a,body.custom-cursor button{cursor:auto!im
           <p class="eyebrow" style="color:#9af6ca;margin-top:22px"><i style="background:#62f5b4;box-shadow:0 0 12px #62f5b4"></i> THE NEXT CHAPTER FOR YOUR BUSINESS</p>
           <h3 id="loanTitle">Your shop.<br><span>Your next big move.</span></h3>
           <p>From daily sales and stock restocking to supplier payments, Kai is preparing a new financial-support experience designed around local small-business needs.</p>
-          <div class="loan-points" aria-label="Made for local shop owners"><span>✦ Grocery & provision stores</span><span>✦ Tea shops & convenience stores</span><span>✦ Small business goals</span></div>
+          <div class="loan-points" aria-label="Made for local shop owners"><span>✦ Grocery & provision stores</span><span>✦ Tea shops & convenience stores</span><span>✦ Small business goals</span><span class="loan-caption">Business growth sequence <span aria-hidden="true">✦</span></span></div>
           <div class="loan-metrics" aria-label="Planned finance tools"><div class="loan-metric"><span class="metric-icon">↗</span><small>BUSINESS MOMENTUM</small><strong>Plan your next move</strong><i class="metric-line"><b></b></i></div><div class="loan-metric"><span class="metric-icon">◈</span><small>STOCK & CASH FLOW</small><strong>Prepare with clarity</strong><i class="metric-line"><b></b></i></div><div class="loan-metric"><span class="metric-icon">✳</span><small>COMING SOON</small><strong>Built for shop owners</strong><i class="metric-line"><b></b></i></div></div>
           <button class="loan-launch" type="button" id="openLoan">
             Explore the Loan Experience
@@ -1021,7 +1026,6 @@ body.custom-cursor,body.custom-cursor a,body.custom-cursor button{cursor:auto!im
         <div class="loan-art" aria-label="Kai holding a bundle of money in a futuristic shop-owner finance scene">
           <div class="loan-orbit" aria-hidden="true"></div><span class="loan-spark s1" aria-hidden="true"></span><span class="loan-spark s2" aria-hidden="true"></span>
           <div class="loan-coin" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="33" stroke="#effff7" stroke-width="3" opacity=".85"/><path d="M61 34c-4-5-10-7-16-5-7 2-11 7-11 13 0 8 7 11 16 13 9 2 16 6 16 14 0 7-7 13-16 14-7 1-14-2-18-7M50 19v62" stroke="#effff7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="loan-caption">Business growth sequence <span aria-hidden="true">✦</span></div>
           <div class="loan-kai"><img src="images/kai-point.webp" alt="Kai presenting a bundle of money for the shop-owner finance experience" loading="lazy" width="265" height="416"><button class="cash-bundle" id="cashBundle" type="button" aria-label="Touch the money bundle to see Kai drop the cash safely"><span class="cash-note back"></span><span class="cash-note mid"></span><span class="cash-note front">₹</span><span class="cash-band">₹</span><span class="cash-glint"></span></button><div class="money-fall-layer" id="moneyFallLayer" aria-hidden="true"></div><div class="cash-status" id="cashStatus" role="status">Kai set the cash bundle down!</div></div>
         </div>
       </div>
