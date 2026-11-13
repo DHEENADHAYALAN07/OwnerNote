@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OwnerNote</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="OwnerNote — the shop book you talk to. Kai writes your credit, stock and cash in Tamil or English.">
+<meta name="theme-color" content="#06261c">
+<link rel="canonical" href="https://ownernote-web.onrender.com/">
+<link rel="icon" type="image/webp" href="images/logo.webp">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OwnerNote — The shop book you talk to">
+<meta property="og:description" content="Tell Kai about credit, stock and daily cash by voice or text.">
+<meta property="og:url" content="https://ownernote-web.onrender.com/">
+<meta property="og:image" content="https://ownernote-web.onrender.com/images/kai.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OwnerNote — The shop book you talk to">
+<meta name="twitter:description" content="Tell Kai about credit, stock and daily cash by voice or text.">
+<meta name="twitter:image" content="https://ownernote-web.onrender.com/images/kai.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=Baloo+Thambi+2:wght@600;700;800&display=swap">
+<style>
+/* Layout: a full-screen intro stage (Kai rides in on his M80, drops the welcome plate, dissolves), then one glass page:
+   hero (copy + Kai free in 3D) → six feature tiles → inside the app (3D phones) → talk to Kai + help → a closing Play Store band;
+   Kai the companion walks every page with you and can be dragged anywhere. Single deliberate look: glassy green on white. */
+:root{
+  --ink:#06261c;            /* deep shop green, all text */
+  --ink-soft:#3c5c51;
+  --leaf:#0e7a54;           /* brand green */
+  --mint:#34d399;           /* glow */
+  --mint-2:#a7f3d0;
+  --gold:#f5c451;           /* the one warm accent: Kai's world */
+  --paper:#f3f8f5;          /* page ground: white with a green breath */
+  --glass:rgba(255,255,255,.58);
+  --glass-strong:rgba(255,255,255,.78);
+  --glass-line:rgba(255,255,255,.85);
+  --glass-green:rgba(14,122,84,.10);
+  --shadow:0 30px 60px -28px rgba(6,38,28,.35), 0 8px 18px -10px rgba(6,38,28,.18);
+  --f-display:"Unbounded","Manrope",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-tamil:"Manrope",system-ui,sans-serif;
+  --r-lg:28px; --r-md:20px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+.ta{font-family:var(--f-tamil)}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--mint);outline-offset:3px;border-radius:10px}
+
+/* ---------- ambient world (shared) ---------- */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:55vmax;height:55vmax;left:-15vmax;top:-20vmax;background:radial-gradient(circle,#6ee7b7,transparent 65%)}
+.aurora i:nth-child(2){width:45vmax;height:45vmax;right:-12vmax;top:10vh;background:radial-gradient(circle,#34d399,transparent 62%);animation-duration:22s}
+.aurora i:nth-child(3){width:40vmax;height:40vmax;left:25vw;bottom:-25vmax;background:radial-gradient(circle,#d1fae5,transparent 60%);animation-duration:26s}
+@keyframes drift{to{transform:translate3d(6vw,4vh,0) scale(1.08)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.35;background-image:radial-gradient(rgba(6,38,28,.10) 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(#000 0,transparent 85%)}
+
+/* ---------- intro stage ---------- */
+.intro{position:relative;z-index:2;height:100svh;min-height:520px;overflow:hidden;display:grid;place-items:center}
+.floor{position:absolute;left:-20%;right:-20%;bottom:-6%;height:46%;transform:perspective(700px) rotateX(64deg);transform-origin:bottom;
+  background-image:linear-gradient(rgba(14,122,84,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(14,122,84,.22) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:linear-gradient(to top,#000 10%,transparent 85%);animation:floorRun 1.1s linear infinite}
+.intro.parked .floor{animation-play-state:paused}
+@keyframes floorRun{to{background-position:-64px 0,-64px 0}}
+.horizon{position:absolute;left:0;right:0;top:calc(54% - 1px);height:2px;background:linear-gradient(90deg,transparent,rgba(52,211,153,.7),transparent);filter:blur(.5px)}
+.stage-copy{position:absolute;left:0;right:0;bottom:max(36px,env(safe-area-inset-bottom,0px));display:grid;justify-items:center;gap:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));text-align:center}
+.tagline{margin:0;font-size:clamp(1.05rem,2.6vw,1.45rem);color:var(--ink-soft);opacity:0;transform:translateY(10px);transition:opacity .8s ease,transform .8s ease}
+.scroll-cue{display:inline-flex;align-items:center;gap:10px;font:600 .82rem/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);text-decoration:none;
+  padding:12px 18px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);opacity:0;transition:opacity .8s ease .3s}
+.scroll-cue svg{animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateY(4px)}}
+.intro.done .tagline{opacity:1;transform:none}
+.intro.done .scroll-cue{opacity:1}
+.replay{position:absolute;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));top:calc(env(safe-area-inset-top,0px) + 16px);z-index:5;font:600 .78rem var(--f-body);
+  color:var(--ink-soft);background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:9px 14px;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.brandmark{position:absolute;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));top:calc(env(safe-area-inset-top,0px) + 14px);z-index:5;display:flex;align-items:center;gap:10px;text-decoration:none}
+.brandmark img{width:34px;height:auto}
+.brandmark b{font:700 1rem var(--f-display);letter-spacing:-.01em}
+
+/* the rig: plate ← rope ← bike, one moving unit */
+.rig{transform-origin:0 100%}
+.rig{position:absolute;left:0;top:0;display:flex;align-items:flex-end;gap:var(--gap);will-change:transform;--gap:clamp(12px,3.4vw,56px)}
+.plate h1 .br{display:none}
+@media (max-width:640px){.plate h1 .br{display:block}.plate h1{white-space:normal}}
+.plate{position:relative;flex:none;padding:clamp(16px,2.6vw,30px) clamp(20px,3.4vw,44px);border-radius:var(--r-lg);
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(255,255,255,.42));border:1px solid var(--glass-line);
+  backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);
+  box-shadow:0 40px 70px -30px rgba(6,38,28,.45),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -12px 30px rgba(52,211,153,.18);
+  transform-origin:100% 0;will-change:transform}
+.plate::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.75) 45%,transparent 60%);
+  background-size:250% 100%;background-position:120% 0;opacity:0}
+.intro.done .plate::after{animation:sheen 2.4s ease .2s 1 both}
+@keyframes sheen{0%{opacity:1;background-position:120% 0}100%{opacity:1;background-position:-60% 0}}
+.plate small{display:block;font:600 clamp(.7rem,1.3vw,.9rem)/1 var(--f-body);letter-spacing:.32em;text-transform:uppercase;color:var(--leaf);margin-bottom:.55em}
+.plate h1{margin:0;font:800 clamp(1.7rem,4.6vw,4.2rem)/1.02 var(--f-display);letter-spacing:-.035em;color:var(--ink);white-space:nowrap;
+  text-shadow:0 1px 0 #cfeee0,0 2px 0 #b6e5cf,0 3px 0 #9edcbf,0 4px 0 #86d2ae,0 14px 24px rgba(6,38,28,.25)}
+.plate h1 em{font-style:normal;background:linear-gradient(100deg,var(--leaf),#15a36f 45%,var(--ink));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;
+  filter:drop-shadow(0 4px 0 #9edcbf) drop-shadow(0 14px 18px rgba(6,38,28,.22))}
+.plate .hook{position:absolute;right:-7px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(245,196,81,.3)}
+.rope{position:absolute;pointer-events:none;overflow:visible}
+.rope path{fill:none;stroke:#7a5a2b;stroke-width:3;stroke-linecap:round}
+.bike{position:relative;flex:none;width:var(--bike);will-change:transform;--bike:clamp(132px,22vw,330px);overflow:visible;isolation:isolate}
+.bike img{display:block;width:100%;height:auto;max-width:none;object-fit:contain;overflow:visible;transform:translateY(75px) scaleX(-1);filter:none}
+.bike .shadow{position:absolute;left:8%;right:8%;bottom:-6px;height:22px;border-radius:50%;background:radial-gradient(rgba(6,38,28,.35),transparent 70%);filter:blur(4px)}
+.speed{position:absolute;right:100%;top:30%;width:min(30vw,260px);height:40%;pointer-events:none;opacity:.7;
+  background:repeating-linear-gradient(180deg,transparent 0 14px,rgba(14,122,84,.35) 14px 16px);mask-image:linear-gradient(90deg,transparent,#000);transition:opacity .4s}
+.intro.parked .speed{opacity:0}
+#dust{position:absolute;inset:0;z-index:4;pointer-events:none;width:100%;height:100%}
+
+/* ---------- page 1 ---------- */
+.page{position:relative;z-index:2;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:clamp(56px,9vw,120px) clamp(40px,6vw,80px)}
+.wrap{max-width:1180px;margin:0 auto}
+.topbar{position:fixed;left:0;right:0;top:0;z-index:50;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:calc(env(safe-area-inset-top,0px) + 12px) 0;transform:translateY(-140%);transition:transform .45s ease;pointer-events:none}
+.topbar.show{pointer-events:auto}
+.topbar.show{transform:none}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 16px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--glass-line);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);box-shadow:var(--shadow)}
+.topbar a.home{display:flex;align-items:center;gap:10px;text-decoration:none}
+.topbar a.home img{width:28px}
+.topbar b{font:700 .98rem var(--f-display)}
+.topbar nav{display:flex;align-items:center;gap:6px}
+.topbar nav a.link{font:600 .9rem var(--f-body);text-decoration:none;color:var(--ink-soft);padding:8px 12px;border-radius:999px}
+.topbar nav a.link:hover{background:var(--glass-green);color:var(--ink)}
+@media (max-width:640px){.topbar nav a.link{display:none}}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:700 .78rem/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--leaf);
+  padding:9px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px var(--mint)}
+.hero h2{margin:22px 0 0;font:800 clamp(2.2rem,5.6vw,4.4rem)/1.04 var(--f-display);letter-spacing:-.035em;text-wrap:balance}
+.hero h2 span{color:var(--leaf)}
+.lede{margin:18px 0 0;max-width:34em;font-size:clamp(1.02rem,1.6vw,1.16rem);color:var(--ink-soft)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:12px;text-decoration:none;border-radius:16px;padding:13px 20px;font:700 1rem var(--f-body);transition:transform .2s ease,box-shadow .2s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn.play{background:linear-gradient(135deg,#0b3b2c,#0e7a54);color:#fff;box-shadow:0 18px 30px -14px rgba(14,122,84,.75),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn.play small{display:block;font:600 .68rem/1.1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.btn.play strong{display:block;font:700 1.1rem/1.15 var(--f-body)}
+.btn.ghost{background:var(--glass);border:1px solid var(--glass-line);color:var(--ink);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.facts{display:flex;flex-wrap:wrap;gap:10px 22px;margin:28px 0 0;padding:0;list-style:none;font:600 .92rem var(--f-body);color:var(--ink-soft)}
+.facts li{display:flex;align-items:center;gap:8px}
+.facts li::before{content:"";width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,var(--mint) 55%,var(--leaf));box-shadow:0 2px 6px rgba(14,122,84,.4)}
+
+/* Kai in a glass orb, tilting in 3D with the pointer */
+.orb-wrap{perspective:1100px;display:grid;place-items:center}
+.orb{position:relative;width:min(100%,460px);aspect-ratio:1/1.08;border-radius:42px;transform-style:preserve-3d;transition:transform .25s ease-out;
+  background:linear-gradient(160deg,rgba(255,255,255,.75),rgba(255,255,255,.28) 55%,rgba(52,211,153,.22));border:1px solid var(--glass-line);
+  backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 60px 90px -40px rgba(6,38,28,.5),inset 0 1px 0 #fff}
+.orb .ring{position:absolute;inset:9% 12% 24%;border-radius:50%;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.9),rgba(167,243,208,.55) 45%,rgba(14,122,84,.25) 70%,transparent 72%);transform:translateZ(20px)}
+.orb .kai{position:absolute;left:50%;bottom:6%;width:62%;transform:translateX(-50%) translateZ(70px);filter:drop-shadow(0 30px 26px rgba(6,38,28,.32));animation:float 5s ease-in-out infinite}
+@keyframes float{50%{margin-bottom:10px}}
+.chip{position:absolute;display:flex;align-items:center;gap:10px;max-width:72%;padding:11px 14px;border-radius:16px;background:var(--glass-strong);border:1px solid var(--glass-line);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow);font:600 .86rem/1.3 var(--f-body)}
+.chip .ta{font-weight:700;font-size:.98rem}
+.chip.c1{left:-6%;top:12%;transform:translateZ(110px)}
+.chip.c2{right:-7%;top:42%;transform:translateZ(130px)}
+.chip.c3{left:-2%;bottom:9%;transform:translateZ(120px)}
+@media (max-width:520px){.chip{font-size:.78rem;padding:9px 11px}.chip.c1{left:-2%}.chip.c2{right:-2%}.chip.c3{left:0}}
+.dot{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mint),var(--leaf));color:#fff}
+.dot.gold{background:linear-gradient(135deg,#ffe08a,#e9a920)}
+.float3d{position:absolute;width:15%;filter:drop-shadow(0 14px 12px rgba(6,38,28,.25));animation:bob 6s ease-in-out infinite}
+.float3d.f1{right:6%;top:6%;transform:translateZ(90px) rotate(10deg)}
+.float3d.f2{left:8%;top:40%;transform:translateZ(60px) rotate(-8deg);animation-delay:-2s;width:12%}
+.float3d.f3{right:9%;bottom:22%;transform:translateZ(80px);animation-delay:-4s;width:13%}
+@keyframes bob{50%{margin-top:-10px}}
+
+
+/* hero Kai: no card — he stands free in 3D and turns to follow the cursor */
+.stage3d{perspective:1000px;display:grid;place-items:center;min-height:440px}
+.kai3d{position:relative;width:min(100%,440px);aspect-ratio:1/1.12;transform-style:preserve-3d;transition:transform .18s ease-out}
+.kai3d .halo{position:absolute;left:12%;right:12%;top:8%;bottom:18%;border-radius:50%;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.95),rgba(167,243,208,.6) 45%,rgba(52,211,153,.15) 68%,transparent 72%);transform:translateZ(-60px);filter:blur(2px)}
+.kai3d .kai{position:absolute;left:50%;bottom:7%;width:60%;transform:translateX(-50%) translateZ(60px);filter:drop-shadow(0 28px 24px rgba(6,38,28,.3));animation:float 5s ease-in-out infinite;cursor:grab}
+.kai3d .ground{position:absolute;left:28%;right:28%;bottom:4%;height:24px;border-radius:50%;background:radial-gradient(rgba(6,38,28,.35),transparent 70%);filter:blur(5px);transform:translateZ(0)}
+.float3d.f4{left:14%;bottom:20%;transform:translateZ(100px) rotate(12deg);animation-delay:-3s;width:11%}
+/* features */
+.features{margin-top:clamp(72px,10vw,130px)}
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px 40px}
+.sec-head h3{margin:0;font:700 clamp(1.6rem,3.4vw,2.5rem)/1.15 var(--f-display);letter-spacing:-.02em;max-width:16em;text-wrap:balance}
+.sec-head p{margin:0;max-width:30em;color:var(--ink-soft)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:34px}
+@media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.grid{grid-template-columns:1fr}}
+.tile{position:relative;padding:24px 22px 22px;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);
+  box-shadow:var(--shadow);transform-style:preserve-3d;transition:transform .3s ease,box-shadow .3s ease;min-width:0}
+.tile:hover{transform:translateY(-4px) rotateX(3deg)}
+.tile .icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5eead4 0%,#10b981 45%,#065f46 100%);
+  box-shadow:0 12px 20px -8px rgba(6,95,70,.6),inset 0 2px 0 rgba(255,255,255,.5),inset 0 -6px 10px rgba(0,0,0,.18)}
+.tile .icon.gold{background:linear-gradient(140deg,#fff0b3 0%,#f5c451 45%,#b7791f 100%);box-shadow:0 12px 20px -8px rgba(183,121,31,.6),inset 0 2px 0 rgba(255,255,255,.6),inset 0 -6px 10px rgba(0,0,0,.15)}
+.tile h4{margin:18px 0 4px;font:700 1.18rem/1.25 var(--f-display);letter-spacing:-.01em}
+.tile .en{margin:0 0 10px;font:700 .78rem var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--leaf)}
+.tile p{margin:0;color:var(--ink-soft);font-size:.98rem}
+.say{display:block;margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(14,122,84,.08);font:600 .95rem/1.35 var(--f-body);font-style:italic;color:var(--ink)}
+.say::before{content:"“"}.say::after{content:"”"}
+
+/* closing band */
+.band{margin-top:clamp(64px,9vw,110px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding:clamp(24px,4vw,44px);border-radius:32px;
+  background:linear-gradient(120deg,rgba(11,59,44,.92),rgba(14,122,84,.88));color:#fff;box-shadow:0 40px 80px -40px rgba(6,38,28,.7);overflow:hidden;position:relative}
+.band::before{content:"";position:absolute;right:-10%;top:-60%;width:60%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(110,231,183,.45),transparent 65%)}
+.band h3{margin:0;font:800 clamp(1.5rem,3.6vw,2.4rem)/1.15 var(--f-display);letter-spacing:-.02em;position:relative}
+.band p{margin:8px 0 0;opacity:.85;position:relative}
+.band .btn.play{background:#fff;color:var(--ink);box-shadow:0 18px 30px -14px rgba(0,0,0,.5);position:relative}
+@media (max-width:700px){.band{grid-template-columns:1fr}}
+footer{position:relative;z-index:2;text-align:center;padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));color:var(--ink-soft);font-size:.86rem}
+
+
+/* ---------- page 2: inside the app ---------- */
+.section{margin-top:clamp(80px,11vw,150px);scroll-margin-top:90px}
+.coverflow{position:relative;margin-top:34px;perspective:1400px}
+.cf-track{display:flex;gap:clamp(14px,2.4vw,28px);overflow-x:auto;scroll-snap-type:x mandatory;padding:30px calc(50% - 130px) 40px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cf-track::-webkit-scrollbar{display:none}
+.cf-item{flex:none;width:260px;scroll-snap-align:center;transform-style:preserve-3d;transition:transform .35s ease,opacity .35s ease;margin:0}
+.phone{position:relative;border-radius:26px;padding:6px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.35));border:1px solid var(--glass-line);
+  box-shadow:0 40px 60px -30px rgba(6,38,28,.55)}
+.phone img{border-radius:20px;width:100%;aspect-ratio:9/16;object-fit:cover}
+.cf-item figcaption{margin-top:16px;text-align:center;font:700 1rem/1.3 var(--f-body)}
+.cf-item figcaption span{display:block;font:600 .78rem var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+.cf-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:4px}
+.cf-nav button{width:46px;height:46px;border-radius:50%;border:1px solid var(--glass-line);background:var(--glass-strong);color:var(--ink);cursor:pointer;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:var(--shadow);font:700 1.1rem var(--f-body)}
+.cf-dots{display:flex;gap:8px}
+.cf-dots i{width:8px;height:8px;border-radius:99px;background:rgba(14,122,84,.25);transition:width .3s,background .3s}
+.cf-dots i.on{width:24px;background:var(--leaf)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:44px 0 0;padding:0;list-style:none;counter-reset:st}
+@media (max-width:820px){.steps{grid-template-columns:1fr}}
+.steps li{position:relative;padding:22px 22px 22px 78px;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);min-width:0}
+.steps li::before{counter-increment:st;content:counter(st);position:absolute;left:20px;top:20px;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+  font:800 1.1rem var(--f-display);color:#fff;background:linear-gradient(140deg,#5eead4,#10b981 45%,#065f46);box-shadow:0 10px 18px -8px rgba(6,95,70,.6),inset 0 2px 0 rgba(255,255,255,.5)}
+.steps b{display:block;font:700 1.05rem var(--f-body)}
+.steps span{color:var(--ink-soft);font-size:.95rem}
+
+/* ---------- page 3: talk to Kai, help ---------- */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.tab{font:700 .92rem var(--f-body);padding:10px 16px;border-radius:999px;border:1px solid var(--glass-line);background:var(--glass);color:var(--ink-soft);cursor:pointer;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.tab[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lines{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}
+@media (max-width:760px){.lines{grid-template-columns:1fr}}
+.line{display:grid;gap:10px;padding:18px;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);min-width:0}
+.bubble{justify-self:end;max-width:92%;padding:12px 16px;border-radius:18px 18px 6px 18px;background:linear-gradient(135deg,#0b3b2c,#0e7a54);color:#fff;font:600 1.02rem/1.4 var(--f-body)}
+.bubble small{display:block;margin-top:4px;font:500 .8rem var(--f-body);opacity:.75}
+.reply{justify-self:start;max-width:92%;padding:12px 16px;border-radius:18px 18px 18px 6px;background:rgba(255,255,255,.9);border:1px solid var(--line,#e3ece8);font-size:.95rem;color:var(--ink)}
+.reply b{color:var(--leaf)}
+.help{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;margin-top:30px;align-items:start}
+@media (max-width:900px){.help{grid-template-columns:1fr}}
+.faq{display:grid;gap:12px}
+.faq details{border-radius:18px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);padding:0 20px}
+.faq summary{list-style:none;cursor:pointer;padding:18px 34px 18px 0;font:700 1.02rem var(--f-body);position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:0;top:14px;font:600 1.4rem var(--f-body);color:var(--leaf);transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 18px;color:var(--ink-soft)}
+.contact{padding:26px;border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.85),rgba(209,250,229,.55));border:1px solid var(--glass-line);box-shadow:var(--shadow);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:relative;overflow:hidden}
+.contact img.kai-mini{position:absolute;right:-10px;bottom:-10px;width:120px;opacity:.95;filter:drop-shadow(0 14px 14px rgba(6,38,28,.25))}
+.contact h4{margin:0;font:700 1.3rem var(--f-display)}
+.contact p{margin:8px 0 0;color:var(--ink-soft);max-width:26em}
+.mail{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;padding-right:110px}
+.mail code{font:700 1rem var(--f-body);padding:10px 14px;border-radius:12px;background:#fff;border:1px solid #d7ebe2;user-select:all;word-break:break-all}
+.mail button{font:700 .9rem var(--f-body);padding:10px 14px;border-radius:12px;border:0;background:var(--ink);color:#fff;cursor:pointer}
+.contact .small{font-size:.86rem;margin-top:16px}
+
+
+/* ---------- final destination: OwnerNote Loan Lab ---------- */
+.loan-world{position:relative;isolation:isolate;overflow:hidden;margin-top:clamp(80px,11vw,150px);padding:clamp(28px,6vw,72px);border-radius:clamp(26px,4vw,44px);color:#effff7;background:radial-gradient(ellipse at 76% 34%,rgba(25,210,135,.22),transparent 36%),radial-gradient(ellipse at 12% 100%,rgba(21,107,86,.42),transparent 42%),linear-gradient(135deg,#061c18 0%,#092b24 52%,#061511 100%);border:1px solid rgba(133,255,205,.2);box-shadow:0 40px 100px -48px rgba(3,31,23,.72),inset 0 1px 0 rgba(255,255,255,.09)}
+.loan-world::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.24;background-image:linear-gradient(rgba(120,255,204,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(120,255,204,.14) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(120deg,transparent 5%,#000 55%,transparent 100%);transform:perspective(500px) rotateX(8deg) scale(1.2)}
+.loan-world::after{content:"";position:absolute;inset:auto -12% -65% 25%;height:70%;z-index:-1;border-radius:50%;background:#17c98a;filter:blur(100px);opacity:.13}
+.loan-topline{display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid rgba(139,255,206,.24);border-radius:999px;background:rgba(101,255,190,.07);color:#a9f8d6;font-size:.75rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.loan-topline i{width:7px;height:7px;border-radius:50%;background:#62f5b4;box-shadow:0 0 14px #62f5b4;animation:loanPulse 1.8s ease-in-out infinite}
+.loan-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.92fr);align-items:center;gap:clamp(20px,5vw,64px);margin-top:24px}
+.loan-copy{position:relative;z-index:2}.loan-copy h3{max-width:700px;margin:18px 0 18px;font:800 clamp(2.1rem,5.5vw,4.8rem)/1.04 var(--f-display);letter-spacing:-.065em;color:#f4fff9}.loan-copy h3 span{background:linear-gradient(100deg,#a7f3d0,#42e9a2 48%,#e1ffb9);background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 7px 24px rgba(52,211,153,.15))}.loan-copy>p{max-width:510px;color:rgba(228,255,242,.72);font-size:clamp(.98rem,1.4vw,1.1rem)}
+.loan-points{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0 28px}.loan-points span{padding:8px 12px;border-radius:999px;border:1px solid rgba(213,255,236,.13);background:rgba(255,255,255,.045);color:#d9fbed;font-size:.82rem}.loan-copy .loan-note{margin-top:14px;color:#b3f4d7;font:700 .95rem/1.6 var(--f-tamil)}
+.loan-launch{display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:14px 20px;background:linear-gradient(110deg,#a7f3d0,#43e7a0);color:#06261c;font:800 .95rem var(--f-body);cursor:pointer;box-shadow:0 12px 32px rgba(52,211,153,.2);transition:transform .25s,box-shadow .25s}.loan-launch:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(52,211,153,.3)}.loan-launch:active{transform:translateY(0) scale(.98)}.loan-launch svg{transition:transform .25s}.loan-launch:hover svg{transform:translateX(4px)}
+.loan-art{position:relative;min-height:360px;display:grid;place-items:center;perspective:1000px;isolation:isolate}.loan-orbit{position:absolute;width:min(34vw,350px);aspect-ratio:1;border:1px solid rgba(142,255,208,.23);border-radius:50%;transform:rotateX(68deg) rotateZ(-24deg);box-shadow:0 0 55px rgba(34,225,145,.08),inset 0 0 40px rgba(34,225,145,.05);animation:loanOrbit 14s linear infinite}.loan-orbit::before,.loan-orbit::after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:#a7f3d0;box-shadow:0 0 24px #4df5b0}.loan-orbit::before{left:14%;top:18%}.loan-orbit::after{right:13%;bottom:15%;width:7px;height:7px;background:#e4ffac}
+.loan-coin{position:absolute;width:clamp(124px,18vw,190px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 23%,#d8ffe8 0%,#67edb4 18%,#159d6d 48%,#07533e 75%,#042b21 100%);border:1px solid rgba(224,255,239,.7);box-shadow:inset 0 7px 10px rgba(255,255,255,.55),inset 0 -15px 25px rgba(0,28,20,.42),0 28px 50px rgba(0,0,0,.4),0 0 70px rgba(52,211,153,.22);transform:translateY(-24px) rotateY(-18deg) rotateX(10deg);animation:coinFloat 4s ease-in-out infinite;z-index:2}.loan-coin::before{content:"";position:absolute;inset:10px;border:1px solid rgba(239,255,246,.48);border-radius:50%;box-shadow:inset 0 0 0 5px rgba(255,255,255,.05)}.loan-coin svg{width:48%;height:48%;filter:drop-shadow(0 5px 3px rgba(0,38,26,.35))}.loan-spark{position:absolute;width:9px;height:9px;border-radius:50%;background:#d5ffe8;box-shadow:0 0 18px 5px rgba(117,255,192,.45)}.loan-spark.s1{top:15%;right:18%}.loan-spark.s2{bottom:23%;left:14%;width:6px;height:6px}.loan-kai{position:absolute;bottom:0;right:1%;width:clamp(116px,18vw,190px);z-index:3;filter:drop-shadow(0 20px 24px rgba(0,0,0,.4));transform-origin:50% 100%;animation:kaiLoanHover 3.4s ease-in-out infinite}.loan-kai img{width:100%;height:auto}.loan-kai::after{content:"KAI • BUSINESS GROWTH";position:absolute;right:0;bottom:0;transform:translateY(70%);font:700 .55rem var(--f-body);letter-spacing:.12em;color:#9af6ca;white-space:nowrap}
+.cash-bundle{position:absolute;z-index:6;left:-5%;top:29%;width:76px;height:48px;transform-style:preserve-3d;transform:rotate(-12deg) rotateY(-16deg);animation:cashBundleFloat 2.8s ease-in-out infinite;filter:drop-shadow(0 10px 12px rgba(0,0,0,.35))}
+.cash-note{position:absolute;inset:5px 0 8px;border:1px solid rgba(224,255,190,.9);border-radius:5px;background:linear-gradient(135deg,#c9f7a1 0%,#78cf7c 42%,#2b8c5e 100%);box-shadow:inset 0 0 0 2px rgba(5,72,45,.16),inset 0 0 0 5px rgba(239,255,212,.2)}
+.cash-note.back{transform:translate3d(4px,-6px,-8px) rotate(5deg);background:linear-gradient(135deg,#e0ffb8,#4cbf79)}.cash-note.mid{transform:translate3d(2px,-2px,-4px) rotate(2deg);background:linear-gradient(135deg,#caffad,#46b875)}
+.cash-note.front{display:grid;place-items:center;color:#075637;font:800 1.15rem var(--f-body);text-shadow:0 1px rgba(255,255,255,.5)}
+.cash-band{position:absolute;left:39%;top:0;bottom:0;width:20px;display:grid;place-items:center;border-left:1px solid rgba(255,255,255,.5);border-right:1px solid rgba(255,255,255,.5);background:linear-gradient(90deg,#f9d875,#fff1a7,#d7a936);color:#60460b;font:800 .65rem var(--f-body);box-shadow:0 0 10px rgba(255,226,122,.25)}
+.cash-glint{position:absolute;right:-7px;top:-10px;width:8px;height:8px;border-radius:50%;background:#e5ffc7;box-shadow:0 0 14px 4px rgba(194,255,162,.55);animation:cashGlint 1.8s ease-in-out infinite}
+.loan-caption{position:absolute;bottom:8%;left:0;padding:10px 13px;border-radius:14px;background:rgba(11,48,38,.7);border:1px solid rgba(173,255,218,.16);backdrop-filter:blur(12px);color:#d7ffeb;font-size:.78rem;box-shadow:0 12px 28px rgba(0,0,0,.16);transform:rotate(-5deg)}
+.loan-modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:rgba(1,15,12,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;visibility:hidden;transition:opacity .28s,visibility .28s}.loan-modal.open{opacity:1;visibility:visible}.loan-dialog{position:relative;overflow:hidden;width:min(100%,480px);padding:34px 28px 30px;border-radius:30px;text-align:center;color:#effff7;background:radial-gradient(circle at 50% 0,rgba(52,211,153,.19),transparent 48%),linear-gradient(150deg,#0b2e25,#041813);border:1px solid rgba(167,243,208,.26);box-shadow:0 35px 100px rgba(0,0,0,.45);transform:translateY(16px) scale(.96);transition:transform .35s cubic-bezier(.2,.9,.25,1.2)}.loan-modal.open .loan-dialog{transform:none}.loan-close{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:white;font-size:1.35rem;cursor:pointer}.loan-modal-kai{width:105px;height:105px;object-fit:contain;margin:0 auto 8px;filter:drop-shadow(0 10px 20px rgba(52,211,153,.22));animation:kaiLoanHover 3s ease-in-out infinite}.loan-dialog .soon-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(167,243,208,.22);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#a7f3d0;font-weight:800}.loan-dialog h3{margin:16px 0 8px;font:800 clamp(1.6rem,6vw,2.2rem)/1.15 var(--f-display);letter-spacing:-.05em}.loan-dialog p{max-width:350px;margin:0 auto;color:rgba(228,255,242,.72)}.loan-dialog .loan-close-cta{margin-top:22px;padding:12px 20px;border-radius:999px;border:1px solid rgba(167,243,208,.3);background:rgba(52,211,153,.12);color:#d9ffeb;font:700 .9rem var(--f-body);cursor:pointer}
+@keyframes cashBundleFloat{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -8px;rotate:3deg}}@keyframes cashGlint{0%,100%{opacity:.35;scale:.7}50%{opacity:1;scale:1.25}}@keyframes coinFloat{0%,100%{transform:translateY(-24px) rotateY(-18deg) rotateX(10deg)}50%{transform:translateY(-38px) rotateY(8deg) rotateX(4deg)}}@keyframes loanOrbit{to{transform:rotateX(68deg) rotateZ(336deg)}}@keyframes kaiLoanHover{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}@keyframes loanPulse{50%{opacity:.45;box-shadow:0 0 4px #62f5b4}}
+@media(max-width:760px){.loan-layout{grid-template-columns:1fr;gap:8px}.loan-copy h3{max-width:580px}.loan-art{min-height:300px;order:-1}.loan-orbit{width:min(70vw,300px)}.loan-coin{width:145px}.loan-kai{right:6%;width:150px}.cash-bundle{width:65px;height:42px;left:-2%;top:28%}.loan-caption{left:4%;bottom:10%}.loan-world{padding:28px 22px}.loan-copy{padding-bottom:12px}}
+@media(prefers-reduced-motion:reduce){.loan-topline i,.loan-orbit,.loan-coin,.loan-kai,.loan-modal-kai,.cash-bundle,.cash-glint{animation:none}.loan-launch,.loan-dialog,.loan-modal{transition:none}}
+
+/* ---------- Kai, everywhere: a companion who walks the site with you; drag him anywhere ---------- */
+.buddy{position:fixed;z-index:55;right:calc(env(safe-area-inset-right,0px) + 12px);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);width:clamp(64px,9vw,124px);
+  touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;opacity:0;pointer-events:none;transform:translateY(60px) scale(.7);
+  transition:opacity .45s ease,transform .5s cubic-bezier(.3,1.5,.4,1);perspective:600px}
+.buddy.on{opacity:1;pointer-events:auto;transform:none}
+.buddy img{width:100%;display:block;transform-style:preserve-3d;transition:transform .16s ease-out;filter:drop-shadow(0 16px 14px rgba(6,38,28,.32));-webkit-user-drag:none}
+.buddy .body{animation:hop 3.4s ease-in-out infinite}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.buddy.dragging{cursor:grabbing;transition:opacity .45s ease}
+.buddy.dragging .body{animation:none;transform:rotate(-10deg) scale(1.1)}
+.buddy.drop .body{animation:land .55s cubic-bezier(.3,1.6,.4,1)}
+@keyframes land{0%{transform:translateY(-14px) scale(1.06,.94)}60%{transform:translateY(2px) scale(.96,1.05)}100%{transform:none}}
+.buddy .shadow{height:12px;margin:-6px 20% 0;border-radius:50%;background:radial-gradient(rgba(6,38,28,.38),transparent 70%);filter:blur(3px);transition:transform .2s,opacity .2s}
+.buddy.dragging .shadow{transform:scale(.6);opacity:.4}
+.buddy .say{position:absolute;bottom:100%;right:34%;margin-bottom:4px;width:max-content;max-width:min(250px,58vw);padding:10px 14px;border-radius:16px 16px 4px 16px;
+  background:var(--glass-strong);border:1px solid var(--glass-line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);
+  font:600 .86rem/1.35 var(--f-body);color:var(--ink);transform-origin:100% 100%;transition:opacity .3s ease,transform .3s ease;pointer-events:none}
+.buddy.left .say{right:auto;left:34%;border-radius:16px 16px 16px 4px;transform-origin:0 100%}
+.buddy .say.hide{opacity:0;transform:scale(.8) translateY(6px)}
+.buddy .hint{position:absolute;top:-4px;right:-6px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#3b2a00;
+  font:800 .8rem var(--f-body);box-shadow:0 6px 12px -4px rgba(0,0,0,.3);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+.buddy.moved .hint{display:none}
+@media (prefers-reduced-motion:reduce){.buddy .body,.buddy .hint{animation:none}}
+.reveal{transition:opacity .8s ease,transform .8s ease}
+.reveal.pre{transform:translateY(22px)}
+
+@media (prefers-reduced-motion:reduce){
+  .aurora i,.floor,.orb .kai,.float3d,.scroll-cue svg{animation:none}
+  .reveal.pre{transform:none}
+}
+
+
+/* ---------- OwnerNote premium polish layer (intro intentionally untouched) ---------- */
+main{isolation:isolate}
+.topbar .wrap{background:rgba(248,255,251,.78);border-color:rgba(255,255,255,.86);box-shadow:0 12px 40px rgba(5,49,34,.11)}
+.topbar nav a.link{transition:color .2s,background .2s,transform .2s}
+.topbar nav a.link:hover{background:rgba(52,211,153,.13);transform:translateY(-1px)}
+.page:not(.intro){position:relative}
+.hero{position:relative}
+.hero h2{letter-spacing:-.055em;text-shadow:0 2px 0 rgba(255,255,255,.8)}
+.hero h2 span{background:linear-gradient(100deg,#087a52,#25bb82 58%,#064b35);-webkit-background-clip:text;background-clip:text;color:transparent}
+.orb,.kai3d{filter:drop-shadow(0 22px 35px rgba(5,64,43,.08))}
+.orb::before,.kai3d::before{content:"";position:absolute;inset:4%;border:1px solid rgba(15,151,99,.14);border-radius:44% 56% 53% 47%/48% 42% 58% 52%;transform:translateZ(-20px) rotate(-9deg);pointer-events:none}
+.tile,.steps li,.line,.phone,.faq,.mail{box-shadow:0 18px 42px -30px rgba(4,54,36,.35);transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s}
+.tile{transform-style:preserve-3d;will-change:transform;border-color:rgba(255,255,255,.9);background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(246,255,250,.54))}
+.tile:hover,.steps li:hover,.line:hover{box-shadow:0 26px 55px -30px rgba(4,91,59,.36);border-color:rgba(52,211,153,.48)}
+.tile .icon{box-shadow:0 12px 22px -12px rgba(4,91,59,.65),inset 0 1px 0 rgba(255,255,255,.4)}
+.band{overflow:hidden;background:radial-gradient(circle at 80% 20%,rgba(76,236,174,.24),transparent 30%),linear-gradient(125deg,#052a20,#0b6447 65%,#063c2c);border:1px solid rgba(167,243,208,.22);box-shadow:0 28px 70px -34px rgba(4,55,37,.6)}
+.band::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(rgba(255,255,255,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.18) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(110deg,transparent,black)}
+.phone{box-shadow:0 28px 55px -25px rgba(4,54,36,.35);transform:translateZ(0)}
+.cf-item:hover .phone{transform:translateY(-7px) rotateY(-3deg);box-shadow:0 35px 65px -28px rgba(4,54,36,.42)}
+.btn,.loan-launch,.tab,.cf-nav button,.loan-close-cta{transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s,background .22s}
+.btn:hover,.loan-launch:hover,.cf-nav button:hover{box-shadow:0 18px 38px -18px rgba(4,91,59,.5)}
+/* Signature cursor: only desktop fine-pointer devices; native touch remains untouched. */
+@media (hover:hover) and (pointer:fine){body.custom-cursor,body.custom-cursor a,body.custom-cursor button{cursor:none}.owner-cursor{position:fixed;left:0;top:0;width:13px;height:13px;border-radius:50%;z-index:200;pointer-events:none;background:#a7f3d0;border:1px solid rgba(5,71,48,.65);box-shadow:0 0 0 5px rgba(52,211,153,.13),0 0 24px rgba(52,211,153,.48);transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s,box-shadow .18s;mix-blend-mode:multiply}.owner-cursor-ring{position:fixed;left:0;top:0;width:38px;height:38px;border:1px solid rgba(8,122,82,.5);border-radius:50%;z-index:199;pointer-events:none;transform:translate(-50%,-50%);transition:width .22s,height .22s,border-color .22s,background .22s}.owner-cursor.is-hover{width:20px;height:20px;background:#38e4a2;box-shadow:0 0 0 8px rgba(52,211,153,.15),0 0 32px rgba(52,211,153,.55)}.owner-cursor-ring.is-hover{width:54px;height:54px;border-color:rgba(8,122,82,.8);background:rgba(52,211,153,.06)}}
+/* Loan Lab: local-shop storytelling with a premium cinematic finish. */
+.loan-world{isolation:isolate;background:radial-gradient(ellipse at 78% 28%,rgba(52,211,153,.16),transparent 34%),radial-gradient(ellipse at 12% 100%,rgba(245,196,81,.08),transparent 35%),linear-gradient(135deg,#061d17 0%,#0a382a 50%,#03150f 100%);border:1px solid rgba(167,243,208,.22);box-shadow:0 35px 90px -40px rgba(2,35,24,.7)}
+.loan-world::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.17;background-image:linear-gradient(rgba(167,243,208,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(167,243,208,.2) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(ellipse at 70% 45%,black,transparent 70%)}
+.loan-copy h3{letter-spacing:-.06em;text-wrap:balance}.loan-copy h3 span{color:#7af0bd;text-shadow:0 0 28px rgba(52,211,153,.15)}
+.loan-art{perspective:1000px}.loan-coin{filter:drop-shadow(0 22px 28px rgba(0,0,0,.35));box-shadow:0 0 0 10px rgba(52,211,153,.045),0 0 65px rgba(52,211,153,.18)}
+.loan-kai{filter:drop-shadow(0 26px 28px rgba(0,0,0,.36))}.cash-bundle{box-shadow:0 14px 24px rgba(0,0,0,.28)}
+.loan-launch{position:relative;overflow:hidden}.loan-launch::after{content:"";position:absolute;inset:0;transform:translateX(-120%);background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transition:transform .65s}.loan-launch:hover::after{transform:translateX(120%)}
+.loan-modal{z-index:210}
+@media(max-width:760px){.loan-world{border-radius:26px}.loan-art{min-height:290px}.loan-copy h3{font-size:clamp(2rem,9vw,3.3rem)}}
+@media(prefers-reduced-motion:reduce){.tile,.steps li,.line,.phone,.btn,.loan-launch,.owner-cursor,.owner-cursor-ring{transition:none!important}}
+
+
+
+/* ===== FUTURE EXPERIENCE LAYER v2 — intentionally does not target .intro ===== */
+:root{--future-bg:#050a10;--future-panel:rgba(13,23,31,.78);--future-line:rgba(135,255,218,.18);--future-text:#eefcf7;--future-muted:#9db9b1;--future-lime:#8dffcb;--future-green:#16d995;--future-violet:#9c8cff}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{background:#050a10;color:var(--future-text)}
+/* Leave the opening bike scene untouched; the new world starts after it. */
+#app{position:relative;isolation:isolate;background:radial-gradient(ellipse at 50% 0%,rgba(21,130,95,.13),transparent 45%),linear-gradient(180deg,#050a10 0%,#071019 42%,#050b11 100%);color:var(--future-text);padding-top:clamp(42px,7vw,92px)}
+#app::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.19;background-image:linear-gradient(rgba(120,255,215,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(120,255,215,.08) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,#000,transparent 88%)}
+/* Global ambient layers only become dark once the intro has passed. */
+.topbar{background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.topbar .wrap{background:rgba(6,15,21,.76);border:1px solid rgba(151,255,218,.17);box-shadow:0 16px 55px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.05);backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3)}
+.topbar .home,.topbar nav a.link{color:#e9fff6}.topbar nav a.link:hover{color:#8dffcb;background:rgba(73,255,187,.09)}
+.topbar .btn.play{background:linear-gradient(110deg,#b9ffe1,#4be9ad);color:#042117;border:0;box-shadow:0 0 28px rgba(51,255,178,.18)}
+#app .wrap{position:relative}
+#app .hero{min-height:min(760px,calc(100svh - 100px));align-items:center;gap:clamp(28px,6vw,90px)}
+#app .eyebrow{color:#9cfbd7;letter-spacing:.14em;text-transform:uppercase;font-size:.76rem}
+#app .eyebrow i{background:#75ffc7;box-shadow:0 0 15px #36f6a8}
+#app .hero h2{color:#f0fff8;font-size:clamp(2.8rem,7.2vw,6.8rem);line-height:.98;letter-spacing:-.075em;text-shadow:none;max-width:780px}
+#app .hero h2 span{background:linear-gradient(100deg,#effff8 0%,#8dffcb 32%,#38e7a4 60%,#b6a9ff 100%);background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 28px rgba(73,255,183,.13))}
+#app .lede{max-width:570px;color:#a6c2b9;font-size:clamp(1rem,1.3vw,1.12rem);line-height:1.85}
+#app .btn{border-radius:15px;position:relative;overflow:hidden}
+#app .btn.play{background:linear-gradient(115deg,#c0ffe3,#42e6a6);color:#05251a;box-shadow:0 10px 35px rgba(35,245,164,.15),inset 0 1px rgba(255,255,255,.8)}
+#app .btn.ghost{color:#d9f8ec;background:rgba(255,255,255,.035);border:1px solid rgba(155,255,218,.23);backdrop-filter:blur(12px)}
+#app .facts li{color:#b8d4ca;border-color:rgba(145,255,213,.18)}
+/* Kai is presented like a living holographic guide, without replacing his image. */
+#app .stage3d{perspective:1200px}
+#app .kai3d{isolation:isolate;transform-style:preserve-3d;filter:none}
+#app .kai3d::before{inset:8% 4% 8%;border:1px solid rgba(119,255,211,.28);border-radius:48% 52% 55% 45%;background:radial-gradient(ellipse at 50% 48%,rgba(38,255,174,.13),transparent 58%);box-shadow:inset 0 0 65px rgba(48,255,182,.07),0 0 80px rgba(36,245,165,.07);animation:futureHalo 12s linear infinite}
+#app .kai3d::after{content:"KAI / YOUR SHOP COPILOT";position:absolute;top:9%;left:50%;transform:translateX(-50%);white-space:nowrap;font:700 .65rem var(--f-body);letter-spacing:.24em;color:#8effce;text-shadow:0 0 18px rgba(88,255,188,.5);opacity:.9}
+#app .kai3d .halo{background:radial-gradient(circle at 50% 45%,rgba(15,55,43,.2),rgba(21,230,148,.19) 42%,rgba(104,93,255,.1) 62%,transparent 73%);filter:blur(8px)}
+#app .kai3d .kai{filter:drop-shadow(0 30px 38px rgba(0,0,0,.48)) drop-shadow(0 0 22px rgba(53,255,177,.18));animation:futureKaiFloat 5.4s ease-in-out infinite}
+#app .float3d{filter:drop-shadow(0 12px 18px rgba(0,0,0,.35)) drop-shadow(0 0 12px rgba(86,255,193,.15))}
+#app .chip{background:rgba(8,24,29,.82);color:#eafff5;border:1px solid rgba(133,255,210,.2);box-shadow:0 18px 40px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.06);backdrop-filter:blur(18px)}
+#app .chip span:not(.dot){color:#eafff5}
+/* Sections become distinct spatial chapters instead of standard blocks. */
+#app .features,#app .section{position:relative;margin-top:clamp(100px,13vw,180px)}
+#app .sec-head h3{color:#f0fff8;font-size:clamp(2rem,4.8vw,4.2rem);letter-spacing:-.065em;line-height:1.08;text-wrap:balance}
+#app .sec-head p{color:#9ebbb1;max-width:680px;line-height:1.8}
+#features > .sec-head::before{content:"FIELD NOTES / 0";display:block;margin-bottom:15px;color:#7fffc7;font:700 .65rem var(--f-body);letter-spacing:.23em}
+#app #features .grid{gap:16px}
+#app .tile{position:relative;overflow:hidden;min-height:260px;padding:clamp(22px,2.8vw,34px);border-radius:24px;border:1px solid rgba(142,255,215,.15);background:linear-gradient(145deg,rgba(17,35,42,.88),rgba(8,19,27,.82));box-shadow:0 24px 65px -40px rgba(0,0,0,.9),inset 0 1px rgba(255,255,255,.055);color:#effff7;backdrop-filter:blur(14px)}
+#app .tile::before{content:"";position:absolute;inset:-1px;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--spot-x,50%) var(--spot-y,50%),rgba(62,255,179,.17),transparent 42%);transition:opacity .3s}
+#app .tile:hover::before{opacity:1}
+#app .tile::after{content:"↗";position:absolute;right:22px;top:20px;color:rgba(146,255,214,.42);font-size:1.2rem;transition:transform .25s,color .25s}
+#app .tile:hover::after{transform:translate(3px,-3px);color:#9affd6}
+#app .tile h4{color:#f0fff8;font-size:1.25rem;letter-spacing:-.035em}
+#app .tile p{color:#9bb8ae;line-height:1.75}
+#app .tile p.en{color:#80e9bd;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
+#app .tile .say{display:block;margin-top:20px;padding:12px 14px;border-radius:13px;background:rgba(110,255,195,.055);border:1px solid rgba(129,255,207,.12);color:#d3f8e8;font-size:.84rem}
+#app .tile .icon{background:linear-gradient(135deg,#4dffc0,#13a875);box-shadow:0 0 26px rgba(38,244,163,.16)}
+#app .tile .icon.gold{background:linear-gradient(135deg,#ffe5a0,#d9a43b)}
+#app .coverflow{padding:24px 0}
+#app .cf-track{perspective:1400px}
+#app .cf-item figcaption{color:#e8fff4}
+#app .cf-item figcaption span{color:#7dfac4}
+#app .phone{padding:7px;border-radius:30px;background:linear-gradient(145deg,#263b3c,#071012);border:1px solid rgba(155,255,216,.22);box-shadow:0 35px 75px -32px rgba(0,0,0,.9),0 0 30px rgba(48,244,167,.06)}
+#app .phone img{border-radius:23px}
+#app .cf-nav button{color:#baffdf;background:rgba(15,33,39,.9);border:1px solid rgba(130,255,207,.22)}
+#app .cf-dots button{background:#34544c}.cf-dots button.active{background:#83ffca;box-shadow:0 0 12px #83ffca}
+#app .steps{counter-reset:future-step;gap:12px}
+#app .steps li{position:relative;background:rgba(12,28,34,.82);border:1px solid rgba(133,255,211,.15);border-radius:18px;color:#eafff4;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+#app .steps li b{color:#eafff4}#app .steps li span{color:#9bb8ad}
+#app .steps li::before{color:#82ffcb}
+#app #talk .tabs{gap:9px}
+#app .tab{color:#b7d6ca;background:rgba(255,255,255,.035);border:1px solid rgba(136,255,208,.15)}
+#app .tab[aria-selected="true"]{color:#052318;background:linear-gradient(110deg,#c0ffe3,#4be9ad);border-color:transparent;box-shadow:0 0 28px rgba(58,255,178,.12)}
+#app .line{background:rgba(12,28,34,.82);border:1px solid rgba(136,255,208,.15);border-radius:18px;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+#app .bubble{background:rgba(81,255,187,.07);border-color:rgba(137,255,211,.13);color:#eafff4}#app .bubble small{color:#89eec2}#app .reply{color:#b3cfc5}
+#app .faq{background:rgba(12,28,34,.78);border:1px solid rgba(136,255,208,.15);border-radius:18px;color:#eafff4;box-shadow:none}#app .faq summary{color:#effff7}#app .faq p{color:#a4c0b6}
+#app .contact{background:linear-gradient(145deg,rgba(16,39,43,.94),rgba(7,20,27,.92));border:1px solid rgba(136,255,208,.18);box-shadow:0 25px 70px -40px #000}
+#app .contact h4,#app .contact p{color:#eafff4}#app .contact p{color:#a4c0b6}
+#app .mail{background:rgba(2,13,17,.5);border:1px solid rgba(136,255,208,.18);color:#eafff4}
+#app .band{border-radius:30px;background:radial-gradient(circle at 80% 20%,rgba(91,255,190,.19),transparent 30%),linear-gradient(120deg,#102a2d,#071b22 60%,#11102b);border:1px solid rgba(150,255,218,.2);box-shadow:0 30px 90px -40px #000}
+#app .band h3{color:#f1fff8;letter-spacing:-.055em}#app .band p{color:#a4c5b9}
+#app .loan-world{border-radius:34px;background:radial-gradient(ellipse at 75% 28%,rgba(53,255,174,.2),transparent 33%),radial-gradient(ellipse at 8% 92%,rgba(150,127,255,.13),transparent 36%),linear-gradient(130deg,#081c20,#0a2e2a 48%,#080d19);border:1px solid rgba(145,255,214,.28);box-shadow:0 45px 110px -48px rgba(0,0,0,.9),inset 0 1px rgba(255,255,255,.08)}
+#app .loan-world::before{opacity:.28;background-size:38px 38px;mask-image:radial-gradient(ellipse at 68% 45%,#000,transparent 72%)}
+#app .loan-art{filter:drop-shadow(0 0 30px rgba(49,255,175,.06))}#app .loan-coin{box-shadow:inset 0 7px 10px rgba(255,255,255,.55),inset 0 -15px 25px rgba(0,28,20,.42),0 28px 50px rgba(0,0,0,.4),0 0 100px rgba(52,211,153,.26)}
+footer{padding:32px 18px 42px;background:#050a10;color:#6f9588;text-align:center;border-top:1px solid rgba(140,255,210,.1);font-size:.8rem}
+@keyframes futureHalo{to{transform:translateZ(-20px) rotate(351deg)}}@keyframes futureKaiFloat{0%,100%{translate:0 0}50%{translate:0 -11px}}
+/* HUD scroll line + chapter marker */
+.future-progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:300;pointer-events:none;background:rgba(115,255,204,.08)}.future-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#46e9ac,#c4ffdf,#9d8bff);box-shadow:0 0 16px rgba(70,255,187,.7)}
+.future-hud{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:80;display:grid;gap:10px;padding:11px 8px;border:1px solid rgba(145,255,214,.15);border-radius:999px;background:rgba(4,14,19,.72);backdrop-filter:blur(16px);opacity:0;pointer-events:none;transition:opacity .3s}
+.future-hud.visible{opacity:1;pointer-events:auto}.future-hud button{width:8px;height:8px;border:0;padding:0;border-radius:50%;background:#45645a;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s}.future-hud button.active{background:#91ffd0;transform:scale(1.5);box-shadow:0 0 12px #50f5b1}
+.future-hud button span{position:absolute;right:28px;transform:translateY(-7px);padding:5px 8px;border-radius:7px;background:#0b1d21;color:#dfffee;font:600 .68rem var(--f-body);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}.future-hud button:hover span{opacity:1}
+/* Cursor is now a visible design element, with click ripples and particle sparks. */
+@media(hover:hover) and (pointer:fine){body.custom-cursor,body.custom-cursor a,body.custom-cursor button{cursor:none}.owner-cursor{width:9px;height:9px;background:#f0fff8;border:0;box-shadow:0 0 0 4px rgba(75,255,187,.18),0 0 22px #43ffb4;mix-blend-mode:normal}.owner-cursor-ring{width:34px;height:34px;border:1px solid rgba(119,255,207,.68);box-shadow:0 0 18px rgba(63,255,180,.1)}.owner-cursor.is-hover{width:12px;height:12px;background:#9cffd4;box-shadow:0 0 0 6px rgba(65,255,181,.18),0 0 26px #40ffb1}.owner-cursor-ring.is-hover{width:58px;height:58px;border-color:#8bffd0;background:radial-gradient(circle,rgba(76,255,184,.1),transparent 70%)}.owner-cursor.is-down{transform:translate(-50%,-50%) scale(.65)}.owner-cursor-ring.is-down{width:20px;height:20px}}
+.future-ripple{position:fixed;width:18px;height:18px;z-index:290;pointer-events:none;border:1px solid rgba(123,255,207,.85);border-radius:50%;transform:translate(-50%,-50%) scale(.2);animation:rippleOut .65s ease-out forwards;box-shadow:0 0 18px rgba(77,255,187,.2)}@keyframes rippleOut{to{opacity:0;transform:translate(-50%,-50%) scale(5);border-width:0}}
+.future-spark{position:fixed;z-index:291;width:4px;height:4px;border-radius:50%;pointer-events:none;background:#b5ffe0;box-shadow:0 0 10px #4affb5;animation:sparkOut .55s ease-out forwards}@keyframes sparkOut{to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.1)}}
+.future-spotlight{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),rgba(44,255,175,.045),transparent 70%);mix-blend-mode:screen}
+@media(max-width:760px){#app{padding-top:38px}#app .hero{min-height:auto;padding-top:20px}#app .hero h2{font-size:clamp(2.65rem,12vw,4.5rem)}#app .kai3d::after{font-size:.52rem;letter-spacing:.15em}#app .features,#app .section{margin-top:90px}#app .tile{min-height:0}#app .loan-world{border-radius:26px}.future-hud{right:5px;gap:8px;padding:9px 6px}.future-hud button{width:6px;height:6px}}
+@media(prefers-reduced-motion:reduce){#app *,#app *::before,#app *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.future-hud,.future-progress,.future-ripple,.future-spark{display:none!important}}
+
+
+/* ===== Refinement pass: orbital cursor, English copy, safer intro plate fit ===== */
+@media (hover:hover) and (pointer:fine){
+  .owner-cursor{width:8px!important;height:8px!important;background:#eafff5!important;border:1px solid #8bffd0!important;box-shadow:0 0 0 3px rgba(90,255,194,.16),0 0 22px #41ffb3!important}
+  .owner-cursor::before{content:"";position:absolute;inset:-10px;border:1px solid rgba(132,255,211,.72);border-radius:5px;transform:rotate(45deg);box-shadow:0 0 14px rgba(69,255,182,.18);animation:cursorCoreSpin 5s linear infinite}
+  .owner-cursor::after{content:"";position:absolute;inset:-16px;border:1px dashed rgba(162,255,222,.6);border-radius:50%;animation:cursorOrbit 7s linear infinite}
+  .owner-cursor-ring{width:38px!important;height:38px!important;border:1px solid rgba(122,255,208,.65)!important;background:radial-gradient(circle,rgba(71,255,184,.07),transparent 65%);box-shadow:0 0 22px rgba(49,255,175,.12),inset 0 0 14px rgba(49,255,175,.06)}
+  .owner-cursor-ring::before,.owner-cursor-ring::after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:#c7ffe5;box-shadow:0 0 10px #58ffb7;top:50%;left:50%;transform:translate(-50%,-50%) translateY(-22px)}
+  .owner-cursor-ring::after{transform:translate(-50%,-50%) translateY(22px);background:#b9a8ff;box-shadow:0 0 10px #9e8bff}
+  .owner-cursor.is-hover::before{inset:-13px}.owner-cursor.is-hover::after{inset:-20px}
+  .owner-cursor-ring.is-hover{width:62px!important;height:62px!important;border-color:#9dffdb!important;background:radial-gradient(circle,rgba(79,255,190,.13),transparent 70%)}
+}
+@keyframes cursorCoreSpin{to{transform:rotate(405deg)}}@keyframes cursorOrbit{to{transform:rotate(360deg)}}
+/* Intro animation choreography is unchanged; this only prevents the welcome plate from clipping. */
+.plate{max-width:min(72vw,980px);min-width:0}
+.plate h1{font-size:clamp(1.55rem,4.1vw,3.7rem);text-wrap:balance;overflow-wrap:normal}
+@media(min-width:641px) and (max-width:1100px){.plate{padding:clamp(16px,2vw,24px) clamp(18px,2.5vw,32px)}.plate h1{font-size:clamp(1.55rem,3.55vw,2.9rem)}}
+@media(max-width:640px){.plate{max-width:66vw;padding:14px 16px}.plate h1{font-size:clamp(1.2rem,5.6vw,2rem);line-height:1.08}.plate small{letter-spacing:.2em;font-size:.62rem}.rig{--gap:10px}}
+.loan-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 24px;max-width:650px}
+.loan-metric{position:relative;min-width:0;overflow:hidden;padding:14px 13px 12px;border:1px solid rgba(154,255,213,.17);border-radius:16px;background:linear-gradient(145deg,rgba(172,255,221,.09),rgba(255,255,255,.025));box-shadow:inset 0 1px rgba(255,255,255,.06);backdrop-filter:blur(10px)}
+.loan-metric::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 30%,rgba(131,255,206,.09),transparent 70%);transform:translateX(-110%);animation:metricSweep 6s ease-in-out infinite}
+.loan-metric:nth-child(2)::after{animation-delay:1.2s}.loan-metric:nth-child(3)::after{animation-delay:2.4s}
+.loan-metric .metric-icon{display:grid;place-items:center;width:28px;height:28px;margin-bottom:12px;border-radius:9px;color:#b7ffdf;background:rgba(69,255,180,.1);border:1px solid rgba(134,255,209,.16);font-size:1rem}
+.loan-metric small{display:block;color:#8edbb8;font-size:.57rem;font-weight:800;letter-spacing:.12em;line-height:1.4}
+.loan-metric strong{display:block;margin-top:5px;color:#f0fff7;font-size:.78rem;line-height:1.35}
+.metric-line{display:block;height:3px;margin-top:12px;border-radius:10px;background:rgba(255,255,255,.08);overflow:hidden}.metric-line b{display:block;width:60%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#43e7a0,#c4ffdf);box-shadow:0 0 10px #43e7a0;animation:metricPulse 3s ease-in-out infinite alternate}
+@keyframes metricSweep{0%,60%,100%{transform:translateX(-110%)}80%{transform:translateX(110%)}}@keyframes metricPulse{to{width:88%;opacity:.6}}
+@media(max-width:760px){.loan-metrics{grid-template-columns:1fr;max-width:none}.loan-metric{display:grid;grid-template-columns:34px 1fr;column-gap:10px;align-items:center;padding:12px}.loan-metric .metric-icon{grid-row:span 2;margin:0}.loan-metric small,.loan-metric strong{grid-column:2}.metric-line{grid-column:2;margin-top:8px}}
+@media(prefers-reduced-motion:reduce){.owner-cursor::before,.owner-cursor::after,.loan-metric::after,.metric-line b{animation:none!important}}
+
+
+/* FUTURE ROBOT-HAND CURSOR: large, readable, never blocks real clicks */
+@media (hover:hover) and (pointer:fine){
+ body.custom-cursor, body.custom-cursor a, body.custom-cursor button, body.custom-cursor [role="button"]{cursor:none!important}
+ .owner-cursor,.owner-cursor-ring{pointer-events:none!important;position:fixed;left:0;top:0;transform:translate(-50%,-50%);will-change:left,top;}
+ .owner-cursor{z-index:9999;width:42px;height:48px;background:transparent;border:0;border-radius:0;box-shadow:none;mix-blend-mode:normal;transition:filter .18s,transform .12s;display:grid;place-items:center}
+ .owner-cursor svg{width:42px;height:48px;overflow:visible;filter:drop-shadow(0 0 7px rgba(54,255,190,.65)) drop-shadow(0 0 18px rgba(54,255,190,.35));}
+ .owner-cursor-ring{z-index:9998;width:56px;height:56px;border:1px solid rgba(77,255,198,.65);border-radius:50%;background:radial-gradient(circle,rgba(52,211,153,.12),transparent 68%);box-shadow:0 0 22px rgba(52,211,153,.17),inset 0 0 16px rgba(52,211,153,.08);transition:width .2s,height .2s,border-color .2s,background .2s;}
+ .owner-cursor.is-hover{width:42px;height:48px;background:transparent;box-shadow:none;filter:brightness(1.2)}
+ .owner-cursor-ring.is-hover{width:72px;height:72px;border-color:#b5ffe1;background:radial-gradient(circle,rgba(52,211,153,.22),transparent 68%)}
+ .owner-cursor.is-press{transform:translate(-50%,-42%) scale(.9);filter:brightness(1.4)}
+ .owner-cursor.is-press svg{filter:drop-shadow(0 0 12px rgba(255,207,90,.9))}
+ .owner-click-ripple{position:fixed;z-index:9997;pointer-events:none;width:14px;height:14px;border:2px solid #80ffd0;border-radius:50%;transform:translate(-50%,-50%);animation:ownerRipple .65s ease-out forwards;box-shadow:0 0 15px rgba(52,211,153,.8)}
+ @keyframes ownerRipple{to{width:88px;height:88px;opacity:0;border-width:1px}}
+}
+/* Intro plate must never crop its headline; keep the original bike choreography intact. */
+.plate{max-width:min(94vw,1040px);box-sizing:border-box}
+.plate h1{white-space:normal;overflow-wrap:normal;font-size:clamp(1.45rem,4.45vw,4.2rem);line-height:1.06;text-wrap:balance}
+.plate h1 .br{display:none}
+.bike img{display:block;object-fit:contain;object-position:center;max-width:100%;height:auto;image-rendering:auto}
+#dust{overflow:visible}
+@media(max-width:640px){.plate{width:calc(100vw - 28px);padding:18px 16px}.plate h1{font-size:clamp(1.65rem,7vw,2.7rem);letter-spacing:-.04em}.plate small{letter-spacing:.2em}.intro{min-height:560px}.bike{max-width:46vw}}
+/* Loan modal: obvious close target, reliable click-away and safe viewport fit. */
+.loan-modal{z-index:10000;padding:clamp(12px,3vw,28px);overflow-y:auto;overscroll-behavior:contain;cursor:auto!important}
+.loan-dialog{width:min(100%,520px);max-height:calc(100svh - 28px);overflow-y:auto;overscroll-behavior:contain;padding:clamp(54px,7vw,70px) clamp(20px,5vw,34px) 28px;scrollbar-width:thin;position:relative}
+.loan-close{position:absolute;z-index:5;right:12px;top:12px;width:50px;height:50px;min-width:50px;min-height:50px;display:grid;place-items:center;font-size:1.8rem;line-height:1;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.34);box-shadow:0 0 0 5px rgba(52,211,153,.06);cursor:pointer!important;touch-action:manipulation}
+.loan-close:hover,.loan-close:focus-visible{background:rgba(52,211,153,.28);outline:2px solid #8fffd0;outline-offset:3px}
+.loan-close-cta{min-height:48px;cursor:pointer!important;touch-action:manipulation}
+@media(max-height:700px){.loan-dialog{padding-top:58px}.loan-modal-kai{max-height:100px;width:auto;height:100px;object-fit:contain}}
+@media(prefers-reduced-motion:reduce){.owner-click-ripple{animation-duration:.01ms!important}.owner-cursor-ring,.owner-cursor{transition:none!important}}
+
+
+/* Precision refinements: robot fingertip cursor, loan cash interaction, intro framing */
+@media (hover:hover) and (pointer:fine) {
+  body.custom-cursor, body.custom-cursor a, body.custom-cursor button, body.custom-cursor [role="button"] { cursor:none !important; }
+  .owner-cursor {
+    width:39px!important;height:47px!important;border:0!important;border-radius:0!important;
+    z-index:10050!important;pointer-events:none!important;background:transparent!important;
+    box-shadow:none!important;mix-blend-mode:normal!important;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 58'%3E%3Cdefs%3E%3ClinearGradient id='m' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23f5fffb'/%3E%3Cstop offset='.48' stop-color='%2379ffd0'/%3E%3Cstop offset='1' stop-color='%230e9f70'/%3E%3C/linearGradient%3E%3Cfilter id='g'%3E%3CfeGaussianBlur stdDeviation='2.2'/%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M20 51 8 38Q5 34 8 31q3-3 6 0l5 5V13q0-4 4-4t4 4v15h2V8q0-4 4-4t4 4v20h2V13q0-4 4-4t4 4v23q0 15-13 17z' fill='%2338e9aa' opacity='.45' filter='url(%23g)'/%3E%3Cpath d='M20 51 8 38Q5 34 8 31q3-3 6 0l5 5V13q0-4 4-4t4 4v15h2V8q0-4 4-4t4 4v20h2V13q0-4 4-4t4 4v23q0 15-13 17z' fill='url(%23m)' stroke='%23eafff6' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M23 15v12m10-16v16m10-11v11M14 34l7 7' stroke='%23065d42' stroke-width='1.6' stroke-linecap='round' opacity='.8'/%3E%3Ccircle cx='24' cy='47' r='2' fill='%23f6ff9b'/%3E%3C/svg%3E");
+    background-size:contain;background-repeat:no-repeat;background-position:center;
+    transform:translate(-18%,-8%) scale(1)!important;transform-origin:18% 10%;transition:filter .12s,transform .12s!important;
+    filter:drop-shadow(0 0 8px rgba(56,233,170,.75));
+  }
+  .owner-cursor svg{width:39px!important;height:47px!important;overflow:visible}
+  .owner-cursor.is-hover {width:39px!important;height:47px!important;filter:drop-shadow(0 0 13px rgba(194,100,255,1)) brightness(1.12)}
+  .owner-cursor.is-down {transform:translate(-18%,-4%) scale(.88) rotate(-5deg)!important;filter:drop-shadow(0 0 18px rgba(221,150,255,.98)) brightness(1.2)}
+  .owner-cursor.is-press .robot-index{transform:translateY(4px) rotate(12deg);transform-origin:22px 38px}
+  .owner-cursor .robot-index{transition:transform .12s ease}
+  .owner-cursor-ring {z-index:10049!important;pointer-events:none!important}
+  .owner-cursor-ring.is-down {width:48px!important;height:48px!important;border-color:rgba(221,150,255,.98)!important;background:radial-gradient(circle,rgba(221,150,255,.2),transparent 65%)!important}
+  .loan-modal {z-index:10000!important}
+  .loan-close {z-index:3!important;pointer-events:auto!important}
+  .loan-modal{z-index:10000!important}
+  .owner-cursor,.owner-cursor-ring{z-index:10050!important;pointer-events:none!important}
+  .owner-cursor.is-down svg{transform:scale(.88);transform-origin:top center}
+  .owner-cursor.is-down{filter:drop-shadow(0 0 18px rgba(255,220,120,.98)) brightness(1.25)!important}
+}
+@media (max-width:700px) {
+  .intro {overflow:hidden}
+  .bike {width:clamp(150px,42vw,240px)!important;max-width:48vw}
+  .intro .welcome-plate, .intro .plate, .intro .welcome {max-width:calc(100vw - 28px)}
+}
+.loan-art {overflow:visible!important}
+.loan-kai {overflow:visible!important;pointer-events:none!important}
+.loan-kai img{pointer-events:none!important}
+.loan-art,.loan-kai{isolation:isolate}
+.cash-bundle{pointer-events:auto!important;z-index:40!important}
+.cash-bundle {position:absolute!important;cursor:pointer;pointer-events:auto!important;touch-action:manipulation;z-index:30;transition:left .65s cubic-bezier(.2,.8,.2,1),top .65s cubic-bezier(.2,.8,.2,1),transform .65s cubic-bezier(.2,.8,.2,1);border:0;padding:0;background:transparent}
+.cash-bundle:focus-visible {outline:2px solid #f6d878;outline-offset:5px;border-radius:7px}
+.cash-bundle.dropped {left:36%!important;top:calc(100% - 4px)!important;transform:translateY(8px) rotate(5deg) scale(1.08)!important;animation:none!important}
+.cash-bundle .cash-note {box-shadow:inset 0 0 0 2px rgba(5,72,45,.16),inset 0 0 0 5px rgba(239,255,212,.2),0 2px 0 rgba(0,0,0,.18)}
+.money-fall-layer {position:absolute;inset:0;z-index:20;pointer-events:none;overflow:visible}
+.falling-note {position:absolute;left:50%;top:56%;width:38px;height:19px;border:1px solid rgba(226,255,190,.9);border-radius:3px;background:linear-gradient(135deg,#d8ffb5,#4ab978);color:#075637;font:800 11px/17px system-ui;text-align:center;box-shadow:0 5px 12px #001c12aa;animation:noteFall 1.25s cubic-bezier(.2,.65,.35,1) forwards;transform:rotate(var(--rot,0deg))}
+@keyframes noteFall {0%{opacity:0;transform:translate3d(0,-25px,0) rotate(0) scale(.65)}12%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translate3d(var(--dx,30px),var(--dy,220px),0) rotate(var(--spin,260deg)) scale(.9)}}
+.cash-status {position:absolute;left:50%;bottom:3%;transform:translateX(-50%);white-space:nowrap;border:1px solid rgba(167,243,208,.3);border-radius:999px;padding:8px 13px;background:rgba(2,24,17,.8);color:#d7ffeb;font-size:.75rem;opacity:0;transition:opacity .25s;pointer-events:none}
+.cash-status.show {opacity:1}
+
+
+/* v3: compact violet robotic hand cursor + visible, tappable cash prop */
+@media (hover:hover) and (pointer:fine){
+ .owner-cursor{width:39px!important;height:47px!important;transform:translate(-18%,-8%)!important;}
+ .owner-cursor svg{width:39px!important;height:47px!important;filter:drop-shadow(0 0 5px rgba(195,94,255,.72)) drop-shadow(0 0 11px rgba(143,55,255,.34))!important;}
+ .owner-cursor.is-hover{filter:drop-shadow(0 0 10px rgba(211,143,255,.98)) brightness(1.1)!important;}
+ .owner-cursor.is-down,.owner-cursor.is-press{transform:translate(-18%,-4%) scale(.88) rotate(-5deg)!important;}
+ .owner-cursor.is-press .robot-index{transform:translateY(4px) rotate(12deg);transform-origin:22px 38px;}
+}
+.loan-art{overflow:visible!important}
+.loan-kai{pointer-events:auto!important;isolation:isolate;z-index:5!important}
+.loan-kai img{pointer-events:none!important;user-select:none}
+.cash-bundle{left:-13%!important;top:26%!important;width:84px!important;height:54px!important;z-index:80!important;pointer-events:auto!important;cursor:pointer!important;filter:drop-shadow(0 10px 15px rgba(0,0,0,.5)) drop-shadow(0 0 10px rgba(100,255,177,.26))!important}
+.cash-bundle::after{content:'TAP THE CASH';position:absolute;left:50%;top:calc(100% + 9px);transform:translateX(-50%);white-space:nowrap;padding:5px 8px;border-radius:999px;background:rgba(2,25,18,.9);border:1px solid rgba(167,243,208,.48);color:#d9ffeb;font:800 9px/1.2 system-ui;letter-spacing:.12em;box-shadow:0 4px 14px #00150e80;animation:cashHintPulse 1.7s ease-in-out infinite;pointer-events:none}
+.cash-bundle:focus-visible{outline:2px solid #d8a4ff;outline-offset:7px}
+.cash-bundle.dropped{left:16%!important;top:calc(100% - 18px)!important;transform:translateY(0) rotate(4deg) scale(1.04)!important;animation:none!important}
+.cash-bundle.dropped::after{content:'TAP TO DROP NOTES';color:#f2dcff;border-color:rgba(207,144,255,.65)}
+.cash-note{border:2px solid #e4ffc2!important;background:linear-gradient(145deg,#edffbe 0%,#9ee77d 32%,#42a86b 68%,#166243 100%)!important}
+.cash-note::after{content:'₹  OWNERNOTE';position:absolute;inset:4px;display:grid;place-items:center;border:1px solid rgba(7,77,46,.5);color:#075637;font:900 8px/1 system-ui;letter-spacing:.06em;transform:rotate(-1deg)}
+.cash-band{z-index:4!important;width:18px!important;box-shadow:0 0 12px rgba(255,226,122,.55)!important}
+.money-fall-layer{z-index:100!important;pointer-events:none!important}
+.falling-note{border:1px solid #efffc6!important;background:linear-gradient(135deg,#eaffc5,#8fdb8d 48%,#279966)!important;color:#075637!important;font-weight:900!important;box-shadow:0 8px 15px #001c12aa, inset 0 0 0 2px #f4ffd080!important}
+@keyframes cashHintPulse{0%,100%{opacity:.76;box-shadow:0 4px 14px #00150e80}50%{opacity:1;box-shadow:0 0 18px #40ffad55}}
+@media(max-width:760px){.cash-bundle{width:72px!important;height:46px!important;left:-8%!important;top:26%!important}.cash-bundle.dropped{left:12%!important;top:calc(100% - 16px)!important}}
+
+/* ---------- dark editorial theme ---------- */
+:root{
+  --ink:#effff8;
+  --ink-soft:#9bb8ad;
+  --leaf:#39d99a;
+  --mint:#68efbb;
+  --mint-2:#b8ffe0;
+  --paper:#06100d;
+  --glass:rgba(12,31,25,.76);
+  --glass-strong:rgba(10,27,22,.92);
+  --glass-line:rgba(167,243,208,.2);
+  --glass-green:rgba(52,211,153,.14);
+  --shadow:0 28px 60px -30px rgba(0,0,0,.7),0 8px 18px -10px rgba(52,211,153,.12);
+}
+body{background:var(--paper);color:var(--ink)}
+body::before{background:var(--paper)}
+.aurora i{opacity:.3}
+.grain{opacity:.18;background-image:radial-gradient(rgba(167,243,208,.12) 1px,transparent 1px)}
+.topbar .wrap{background:rgba(6,16,13,.86)!important;border-color:rgba(167,243,208,.2);box-shadow:0 16px 42px rgba(0,0,0,.38)}
+.topbar b,.brandmark b{color:var(--ink)}
+.topbar nav a.link{color:var(--ink-soft)}
+.topbar nav a.link:hover{background:var(--glass-green);color:var(--mint-2)}
+.page{background:transparent}
+.eyebrow,.chip,.tile,.steps li,.line,.faq details,.contact,.cf-nav button{background:var(--glass);border-color:var(--glass-line);box-shadow:var(--shadow)}
+.hero h2,.sec-head h3,.tile h4,.band h3{color:var(--ink)}
+.hero::before{content:"OWNERNOTE";position:absolute;left:50%;top:52%;z-index:0;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;color:transparent;-webkit-text-stroke:1px rgba(104,239,187,.16);font:800 clamp(4.5rem,15vw,13rem)/1 var(--f-display);letter-spacing:-.08em;opacity:.7}
+.hero>*{position:relative;z-index:1}
+.lede,.sec-head p,.tile p,.faq details p,.contact p{color:var(--ink-soft)}
+.tile,.steps li,.line{background:linear-gradient(145deg,rgba(18,43,34,.86),rgba(8,23,18,.78));}
+.say{background:rgba(52,211,153,.1);color:var(--mint-2)}
+.reply{background:rgba(52,211,153,.12);border-color:rgba(167,243,208,.24);color:#eafff4!important}
+.reply b{color:#62f5b4}
+.faq summary{color:var(--ink)}
+.contact{background:linear-gradient(160deg,rgba(18,52,40,.9),rgba(8,25,19,.88))}
+.contact img.kai-mini{width:100px;right:-6px;bottom:-18px;z-index:1}
+.contact h4,.contact>p,.contact>.mail{position:relative;z-index:2}
+.mail{background:transparent!important;border:0!important;box-shadow:none!important;padding-right:0}
+.mail code{background:rgba(239,255,248,.94);color:#08231a;border-color:rgba(167,243,208,.25)}
+.mail button{background:#0b5b43;color:#effff8}
+.cf-item figcaption{color:var(--ink)}
+.cf-item figcaption span{color:var(--mint)}
+.plate{background:linear-gradient(135deg,rgba(11,34,27,.9),rgba(7,22,17,.78));border-color:rgba(167,243,208,.3);box-shadow:0 40px 70px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.14)}
+.plate h1{color:var(--ink);text-shadow:0 2px 0 rgba(57,217,154,.25),0 14px 24px rgba(0,0,0,.45)}
+.plate small,.scroll-cue{color:var(--mint)}
+.scroll-cue,.replay{background:var(--glass-strong);border-color:var(--glass-line);color:var(--mint)}
+footer{color:var(--ink-soft)}
+
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ================= INTRO ================= -->
+<section class="intro" id="intro" aria-label="Welcome to OwnerNote">
+  <a class="brandmark" href="#app" aria-label="OwnerNote"><img src="images/logo.webp" alt=""><b>OwnerNote</b></a>
+  <button class="replay" id="replay" type="button">Replay ↺</button>
+  <div class="floor" aria-hidden="true"></div>
+  <div class="horizon" aria-hidden="true"></div>
+
+  <div class="rig" id="rig">
+    <div class="plate" id="plate">
+      <small>Kai brings you</small>
+      <h1>Welcome to<span class="br"></span> <em>OwnerNote</em></h1>
+      <span class="hook" aria-hidden="true"></span>
+    </div>
+    <div class="bike" id="bike" aria-hidden="true">
+      <div class="speed"></div>
+      <div class="shadow"></div>
+      <img id="bikeImg" src="images/kai-bike.webp" alt="" width="587" height="840">
+    </div>
+  </div>
+  <svg class="rope" id="rope" aria-hidden="true"><path id="ropePath" d=""/></svg>
+  <canvas id="dust" aria-hidden="true"></canvas>
+
+  <div class="stage-copy">
+    <p class="tagline">Your shop's accounting buddy — <b>Kai</b></p>
+    <a class="scroll-cue" href="#app">Scroll to meet Kai
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </a>
+  </div>
+</section>
+
+<header class="topbar" id="topbar">
+  <div class="wrap">
+    <a class="home" href="#intro"><img src="images/logo.webp" alt=""><b>OwnerNote</b></a>
+    <nav>
+      <a class="link" href="#features">Features</a>
+      <a class="link" href="#inside">Inside the app</a>
+      <a class="link" href="#talk">Talk to Kai</a>
+      <a class="link" href="#help">Help</a>
+      <a class="btn play" style="padding:9px 16px;border-radius:999px" href="https://play.google.com/store/apps/details?id=com.ownernote.app" target="_blank" rel="noopener"><strong style="font-size:.92rem">Get the app</strong></a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= PAGE 1 ================= -->
+<main class="page" id="app">
+  <div class="wrap">
+    <section class="hero">
+      <div class="reveal pre">
+        <span class="eyebrow"><i></i>The shop book you talk to</span>
+        <h2>Just speak.<br><span>Kai keeps the books.</span></h2>
+        <p class="lede">OwnerNote keeps your shop's credit, stock and daily cash. Tell Kai what happened in everyday language, by voice or text, and he writes it down. Nothing is saved until you tap Confirm.</p>
+        <div class="cta">
+          <a class="btn play" href="https://play.google.com/store/apps/details?id=com.ownernote.app" target="_blank" rel="noopener">
+            <svg width="26" height="28" viewBox="0 0 26 28" aria-hidden="true"><path d="M2 2.2v23.6c0 .8.9 1.3 1.6.9L24 15c.7-.4.7-1.4 0-1.8L3.6 1.3C2.9.9 2 1.4 2 2.2z" fill="#6ee7b7"/><path d="M2 2.2v23.6L15 14z" fill="#fff" opacity=".9"/></svg>
+            <span><small>Get it on</small><strong>Google Play</strong></span>
+          </a>
+          <a class="btn ghost" href="#features">See what Kai does</a>
+        </div>
+        <ul class="facts">
+          <li>Voice or text input</li>
+          <li>Speak or type</li>
+          <li>Confirm before every save</li>
+        </ul>
+      </div>
+
+      <div class="stage3d reveal pre" id="stage3d">
+        <div class="kai3d" id="kai3d">
+          <div class="halo"></div>
+          <img class="float3d f1" src="images/biscuit.webp" alt="">
+          <img class="float3d f2" src="images/oil.webp" alt="">
+          <img class="float3d f3" src="images/milk.webp" alt="">
+          <img class="float3d f4" src="images/dal.webp" alt="">
+          <img class="kai" id="heroKai" src="images/kai-point.webp" alt="Kai, the OwnerNote assistant, reaching out to shake hands" width="497" height="800">
+          <div class="ground"></div>
+          <div class="chip c1"><span class="dot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0012 0M12 17v4"/></svg></span><span>“Kumar took ₹500 on credit”</span></div>
+          <div class="chip c2"><span class="dot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span>Saved · Kumar now owes <b>₹1,750</b></span></div>
+          <div class="chip c3"><span class="dot gold"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span><span>₹300 on PhonePe → Daily Cash Note</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="sec-head reveal pre">
+        <h3>Everything a shop counter needs, in one voice.</h3>
+        <p>Kai reads what you say, shows you a card, and saves only after you confirm. The same Kai answers when you type.</p>
+      </div>
+      <div class="grid">
+        <article class="tile reveal pre">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M3 7h18v10H3z"/><path d="M7 12h4M15 10v4"/></svg></div>
+          <h4>Credit &amp; payments</h4><p class="en">Who owes whom</p>
+          <p>Who owes you, who you owe, and when it is due — updated the moment you say it.</p>
+          <span class="say">Logesh owes ₹2,000 on the 5th next month</span>
+        </article>
+        <article class="tile reveal pre">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></div>
+          <h4>Stock in &amp; out</h4><p class="en">Inventory by voice and bill</p>
+          <p>Say what came in and what sold. Upload a supplier bill and add every item to stock in one tap.</p>
+          <span class="say">Received 25 kg of rice</span>
+        </article>
+        <article class="tile reveal pre">
+          <div class="icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v18M17 7.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2.2 2.6 5 3.2 5 1.4 5 3.3-2.2 3-5 3-5-1.1-5-3"/></svg></div>
+          <h4>Automatic UPI Notes</h4><p class="en">UPI, noted by itself</p>
+          <p>Payments from supported UPI apps can be added to the Daily Cash Note when you enable notification access. You can dismiss an entry with one tap.</p>
+          <span class="say">₹500 received — Kumar S (PhonePe)</span>
+        </article>
+        <article class="tile reveal pre">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></div>
+          <h4>Remembered Items</h4><p class="en">Remembers where you kept it</p>
+          <p>Keys, bills, extra stock, a tool lent to someone. Ask days later and Kai tells you.</p>
+          <span class="say">Where did I keep the spare key?</span>
+        </article>
+        <article class="tile reveal pre">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h4>Daily Sales Note</h4><p class="en">Sales &amp; reports</p>
+          <p>Each sale and service with its count and price, the day's cash and UPI, and the day's report as a PDF.</p>
+          <span class="say">5 haircuts, 2 shaves, 3 facials</span>
+        </article>
+        <article class="tile reveal pre">
+          <div class="icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 004 0"/></svg></div>
+          <h4>Reminders</h4><p class="en">On your phone's alarm</p>
+          <p>Due dates and calls to make, on your phone's alarm at the time you said.</p>
+          <span class="say">Remind me to call Kumar tomorrow at 10</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= PAGE 2: inside the app ================= -->
+    <section class="section" id="inside">
+      <div class="sec-head reveal pre">
+        <h3>Inside OwnerNote.</h3>
+        <p>Swipe through the six screens shop owners use every day — credit, stock, automatic UPI notes, remembered items, reports and reminders.</p>
+      </div>
+      <div class="coverflow">
+        <div class="cf-track" id="cfTrack">
+          <figure class="cf-item"><div class="phone"><img src="images/shot1.webp" alt="Kai drafting a credit entry from a spoken line" loading="lazy" width="540" height="960"></div><figcaption><span>Speak</span>Just say it</figcaption></figure>
+          <figure class="cf-item"><div class="phone"><img src="images/shot2.webp" alt="Customer balances and today's collection" loading="lazy" width="540" height="960"></div><figcaption><span>Credit</span>Who owes what</figcaption></figure>
+          <figure class="cf-item"><div class="phone"><img src="images/shot3.webp" alt="Stock list with low stock alerts" loading="lazy" width="540" height="960"></div><figcaption><span>Stock</span>Low stock, flagged early</figcaption></figure>
+          <figure class="cf-item"><div class="phone"><img src="images/shot4.webp" alt="UPI money added to the Daily Cash Note" loading="lazy" width="540" height="960"></div><figcaption><span>UPI Notes</span>Payments, added automatically</figcaption></figure>
+          <figure class="cf-item"><div class="phone"><img src="images/shot5.webp" alt="Kai remembering where keys were kept" loading="lazy" width="540" height="960"></div><figcaption><span>Remembered Items</span>Kai remembers</figcaption></figure>
+          <figure class="cf-item"><div class="phone"><img src="images/shot6.webp" alt="Weekly sales and reminders" loading="lazy" width="540" height="960"></div><figcaption><span>Reports</span>Answers in one question</figcaption></figure>
+        </div>
+        <div class="cf-nav">
+          <button type="button" id="cfPrev" aria-label="Previous screen">←</button>
+          <div class="cf-dots" id="cfDots" aria-hidden="true"></div>
+          <button type="button" id="cfNext" aria-label="Next screen">→</button>
+        </div>
+      </div>
+      <ol class="steps reveal pre">
+        <li><b>Install OwnerNote</b><span>Get it free from Google Play on any Android phone.</span></li>
+        <li><b>Sign in with your mobile number</b><span>Add your shop's name and type once.</span></li>
+        <li><b>Tap the mic and speak</b><span>Kai shows a card. Tap Confirm and it is saved.</span></li>
+      </ol>
+    </section>
+
+    <!-- ================= PAGE 3: talk to Kai, help ================= -->
+    <section class="section" id="talk">
+      <div class="sec-head reveal pre">
+        <h3>Say it the way you say it at the counter.</h3>
+        <p>Choose a topic to explore everyday phrases, the information Kai understands, and the action he prepares for confirmation.</p>
+      </div>
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="lines" id="lines" role="tabpanel"></div>
+    </section>
+
+    <section class="section" id="help">
+      <div class="sec-head reveal pre">
+        <h3>Questions owners ask.</h3>
+        <p>Short answers. Write to us for anything else.</p>
+      </div>
+      <div class="help">
+        <div class="faq">
+          <details open><summary>Does Kai save anything without asking me?</summary><p>No. Kai shows a card with the person, the amount and the date, and saves only when you tap Confirm. The one exception is Automatic UPI Notes on the app you mark as your shop's: that UPI money goes into the Daily Cash Note by itself, and one tap on Kai's notification removes it.</p></details>
+          <details><summary>How can I speak to Kai?</summary><p>You can use voice or text. Kai prepares a clear entry for you to review before you confirm it.</p></details>
+          <details><summary>Which UPI apps does Automatic UPI Notes read?</summary><p>Google Pay, PhonePe, Paytm, BharatPe and BHIM — only after you turn it on and give notification access, and only the amount and the payer's name.</p></details>
+          <details><summary>Where is my data kept?</summary><p>Customers, suppliers, credit, stock and the Daily Cash Note are saved on OwnerNote's server after you confirm them, so they are there when you sign in again.</p></details>
+          <details><summary>How do I delete my account?</summary><p>Follow the steps on the <a href="https://ownernote-web.onrender.com/delete-account.html" target="_blank" rel="noopener">delete account page</a>. You do not need to open the app.</p></details>
+        </div>
+        <aside class="contact">
+          <h4>Talk to us</h4>
+          <p>Found something Kai didn't understand? Send us the line you said — we teach Kai new words every week.</p>
+          <div class="mail"><code id="mailAddr">supportownernote@gmail.com</code><button type="button" id="copyMail">Copy</button></div>
+          <p class="small">Powered by NewonX</p>
+          <img class="kai-mini" src="images/kai.webp" alt="" width="554" height="900">
+        </aside>
+      </div>
+    </section>
+
+    <section class="band reveal pre">
+      <div>
+        <h3>Hand your shop's books to Kai.</h3>
+        <p>Install OwnerNote from Google Play and say your first entry.</p>
+      </div>
+      <a class="btn play" href="https://play.google.com/store/apps/details?id=com.ownernote.app" target="_blank" rel="noopener">
+        <svg width="26" height="28" viewBox="0 0 26 28" aria-hidden="true"><path d="M2 2.2v23.6c0 .8.9 1.3 1.6.9L24 15c.7-.4.7-1.4 0-1.8L3.6 1.3C2.9.9 2 1.4 2 2.2z" fill="#0e7a54"/><path d="M2 2.2v23.6L15 14z" fill="#34d399"/></svg>
+        <span><small>Get it on</small><strong>Google Play</strong></span>
+      </a>
+    </section>
+
+    <!-- ================= FINAL PAGE: OWNERNOTE LOAN LAB ================= -->
+    <section class="loan-world reveal pre" id="loan" aria-labelledby="loanTitle">
+      <div class="loan-topline"><i aria-hidden="true"></i> OwnerNote Loan Lab <span>·</span> For local shop owners</div>
+      <div class="loan-layout">
+        <div class="loan-copy">
+          <p class="eyebrow" style="color:#9af6ca;margin-top:22px"><i style="background:#62f5b4;box-shadow:0 0 12px #62f5b4"></i> THE NEXT CHAPTER FOR YOUR BUSINESS</p>
+          <h3 id="loanTitle">Your shop.<br><span>Your next big move.</span></h3>
+          <p>From daily sales and stock restocking to supplier payments, Kai is preparing a new financial-support experience designed around local small-business needs.</p>
+          <div class="loan-points" aria-label="Made for local shop owners"><span>✦ Grocery & provision stores</span><span>✦ Tea shops & convenience stores</span><span>✦ Small business goals</span></div>
+          <div class="loan-metrics" aria-label="Planned finance tools"><div class="loan-metric"><span class="metric-icon">↗</span><small>BUSINESS MOMENTUM</small><strong>Plan your next move</strong><i class="metric-line"><b></b></i></div><div class="loan-metric"><span class="metric-icon">◈</span><small>STOCK & CASH FLOW</small><strong>Prepare with clarity</strong><i class="metric-line"><b></b></i></div><div class="loan-metric"><span class="metric-icon">✳</span><small>COMING SOON</small><strong>Built for shop owners</strong><i class="metric-line"><b></b></i></div></div>
+          <button class="loan-launch" type="button" id="openLoan">
+            Explore the Loan Experience
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="loan-note">A smarter way to support your next business move is coming soon.</p>
+        </div>
+        <div class="loan-art" aria-label="Kai holding a bundle of money in a futuristic shop-owner finance scene">
+          <div class="loan-orbit" aria-hidden="true"></div><span class="loan-spark s1" aria-hidden="true"></span><span class="loan-spark s2" aria-hidden="true"></span>
+          <div class="loan-coin" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="33" stroke="#effff7" stroke-width="3" opacity=".85"/><path d="M61 34c-4-5-10-7-16-5-7 2-11 7-11 13 0 8 7 11 16 13 9 2 16 6 16 14 0 7-7 13-16 14-7 1-14-2-18-7M50 19v62" stroke="#effff7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="loan-caption">Business growth sequence <span aria-hidden="true">✦</span></div>
+          <div class="loan-kai"><img src="images/kai-point.webp" alt="Kai presenting a bundle of money for the shop-owner finance experience" loading="lazy" width="265" height="416"><button class="cash-bundle" id="cashBundle" type="button" aria-label="Touch the money bundle to see Kai drop the cash safely"><span class="cash-note back"></span><span class="cash-note mid"></span><span class="cash-note front">₹</span><span class="cash-band">₹</span><span class="cash-glint"></span></button><div class="money-fall-layer" id="moneyFallLayer" aria-hidden="true"></div><div class="cash-status" id="cashStatus" role="status">Kai set the cash bundle down!</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="buddy" id="buddy" role="img" aria-label="Kai, your OwnerNote buddy. Drag him anywhere.">
+  <div class="say hide" id="buddySay" aria-live="polite"></div>
+  <span class="hint" aria-hidden="true">✋</span>
+  <div class="body"><img id="buddyImg" src="images/kai-curious.webp" alt="" width="265" height="416" draggable="false"></div>
+  <div class="shadow"></div>
+</div>
+
+
+<div class="owner-cursor-ring" id="ownerCursorRing" aria-hidden="true"></div>
+<div class="owner-cursor" id="ownerCursor" aria-hidden="true">
+ <svg viewBox="0 0 64 76" role="presentation" aria-hidden="true">
+  <defs>
+   <linearGradient id="robotHandMetal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e9ff"/><stop offset=".28" stop-color="#c77aff"/><stop offset=".62" stop-color="#6525a8"/><stop offset="1" stop-color="#160d2e"/></linearGradient>
+   <linearGradient id="robotHandEdge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffbaff"/><stop offset="1" stop-color="#7d2cff"/></linearGradient>
+   <filter id="robotHandGlow"><feGaussianBlur stdDeviation="2.5"/></filter>
+  </defs>
+  <path d="M22 69 12 55 5 43Q3 38 7 35q4-3 7 2l5 7V17q0-5 5-5t5 5v22h3V8q0-5 5-5t5 5v31h3V13q0-5 5-5t5 5v28h3V23q0-5 5-5t5 5v22q0 16-15 23z" fill="#b64cff" opacity=".7" filter="url(#robotHandGlow)"/>
+  <path d="M22 69 12 55 5 43Q3 38 7 35q4-3 7 2l5 7V17q0-5 5-5t5 5v22h3V8q0-5 5-5t5 5v31h3V13q0-5 5-5t5 5v28h3V23q0-5 5-5t5 5v22q0 16-15 23z" fill="url(#robotHandMetal)" stroke="url(#robotHandEdge)" stroke-width="1.7" stroke-linejoin="round"/>
+  <path class="robot-index" d="M22 17v21" fill="none" stroke="#f8d9ff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M36 10v29M48 15v24M59 25v20M15 42l8 9 9 2 7-4" fill="none" stroke="#f3baff" stroke-width="1.5" stroke-linecap="round" opacity=".95"/>
+  <rect x="20" y="39" width="34" height="16" rx="5" fill="#281042" stroke="#c77aff" stroke-width="1.3"/>
+  <circle cx="27" cy="47" r="2.4" fill="#e5a4ff"/><circle cx="47" cy="47" r="2.4" fill="#e5a4ff"/>
+  <path d="M27 62h20l-3 5H30z" fill="#a94cff" stroke="#f4caff" stroke-width="1"/>
+ </svg>
+</div>
+
+<div class="loan-modal" id="loanModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loanModalTitle">
+  <div class="loan-dialog" role="document">
+    <button class="loan-close" id="closeLoan" type="button" aria-label="Close">×</button>
+    <img class="loan-modal-kai" src="images/kai-joyful.webp" alt="Kai is excited about what's next" width="265" height="416">
+    <div class="soon-chip"><span aria-hidden="true">✦</span> Coming soon</div>
+    <h3 id="loanModalTitle">A new way forward<br>is on the way.</h3>
+    <p>Kai is preparing a future loan experience to help small businesses plan their next step. Stay tuned!</p>
+    <p>The OwnerNote Loan feature is not available yet. This is a preview only — no loan application or approval is being offered.</p>
+    <button class="loan-close-cta" id="loanOkay" type="button">Sounds good — I’ll wait ✨</button>
+  </div>
+</div>
+<footer>© 2026 OwnerNote · Built for independent shop owners</footer>
+
+<script>
+(function(){
+  const intro=document.getElementById('intro'), rig=document.getElementById('rig'), plate=document.getElementById('plate'),
+        bike=document.getElementById('bike'), bikeImg=document.getElementById('bikeImg'), rope=document.getElementById('rope'),
+        ropePath=document.getElementById('ropePath'), dust=document.getElementById('dust'), topbar=document.getElementById('topbar');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let anims=[], raf=0, running=false;
+
+  // where the rig sits: the plate centred, just above the horizon
+  function layout(){
+    const W=intro.clientWidth, H=intro.clientHeight;
+    const pr=plate.getBoundingClientRect(), br=bike.getBoundingClientRect();
+    const gap=parseFloat(getComputedStyle(rig).gap)||40;
+    const rigW=pr.width+gap+br.width, rigH=Math.max(pr.height,br.height);
+    const groundY=H*0.62;                                  // wheels on the floor
+    const top=groundY-rigH;
+    // the whole rig (plate + Kai on his bike) fitted to the width and centred — nothing goes off the edge (as the app)
+    const margin=Math.min(16,W*.03);
+    const sc=Math.min(1,(W-2*margin)/rigW);
+    const endX=(W-rigW*sc)/2;
+    const startX=-rigW*sc-40;
+    return {W,H,rigW,rigH,top,endX,startX,pr,br,gap,sc};
+  }
+  function drawRope(){
+    const ir=intro.getBoundingClientRect(), p=plate.getBoundingClientRect(), b=bike.getBoundingClientRect();
+    const x1=p.right-ir.left, y1=p.top+p.height/2-ir.top;
+    const x2=b.left+b.width*0.16-ir.left, y2=b.top+b.height*0.52-ir.top;   // the luggage rack (bike flipped: rear is on the left)
+    const sag=Math.min(28,Math.abs(x2-x1)*0.35);
+    rope.setAttribute('width',ir.width); rope.setAttribute('height',ir.height); rope.style.left='0'; rope.style.top='0';
+    ropePath.setAttribute('d',`M${x1},${y1} Q${(x1+x2)/2},${Math.max(y1,y2)+sag} ${x2},${y2}`);
+  }
+  function loop(){ drawRope(); raf=requestAnimationFrame(loop) }
+
+  function finalState(){
+    const L=layout();
+    rig.style.transform=`translate3d(${L.endX}px,${L.top}px,0) scale(${L.sc})`;
+    plate.style.transform='none'; bike.style.opacity='1'; rope.style.opacity='0';
+    intro.classList.add('parked','done');
+  }
+
+  // the bike turns to dust: its own pixels, drifting off to the right and up
+  function dissolve(){
+    return new Promise(res=>{
+      const r=bikeImg.getBoundingClientRect(), ir=intro.getBoundingClientRect(), dpr=Math.min(2,devicePixelRatio||1);
+      dust.width=ir.width*dpr; dust.height=ir.height*dpr; const ctx=dust.getContext('2d'); ctx.scale(dpr,dpr);
+      const off=document.createElement('canvas'); const w=Math.max(1,Math.round(r.width)), h=Math.max(1,Math.round(r.height));
+      off.width=w; off.height=h; const o=off.getContext('2d');
+      o.translate(w,0); o.scale(-1,1); o.drawImage(bikeImg,0,0,w,h);
+      let data; try{ data=o.getImageData(0,0,w,h).data }catch(e){ bike.animate([{opacity:1,filter:'blur(0)'},{opacity:0,filter:'blur(12px)'}],{duration:900,fill:'forwards'}).finished.then(res); return }
+      const step=w<220?3:4, ps=[];
+      for(let y=0;y<h;y+=step) for(let x=0;x<w;x+=step){
+        const i=(y*w+x)*4; if(data[i+3]<120) continue;
+        ps.push({x:r.left-ir.left+x,y:r.top-ir.top+y,c:`rgb(${data[i]},${data[i+1]},${data[i+2]})`,
+          vx:1.2+Math.random()*3.2+(x/w)*1.5, vy:-(0.4+Math.random()*1.6), d:(x/w)*260+Math.random()*180, s:step*0.9});
+      }
+      bike.style.opacity='0';
+      const t0=performance.now(), life=1300;
+      (function frame(t){
+        const el=t-t0; ctx.clearRect(0,0,ir.width,ir.height); let alive=false;
+        for(const p of ps){
+          const k=Math.max(0,el-p.d); const a=1-k/life; if(a<=0) continue; alive=true;
+          const q=k/16; ctx.globalAlpha=a; ctx.fillStyle=k>0&&Math.random()<.08?'#6ee7b7':p.c;
+          ctx.fillRect(p.x+p.vx*q+Math.sin(q/6)*2, p.y+p.vy*q-q*q*0.004, p.s*(0.6+a*0.5), p.s*(0.6+a*0.5));
+        }
+        if(alive) requestAnimationFrame(frame); else { ctx.clearRect(0,0,ir.width,ir.height); res() }
+      })(t0);
+    });
+  }
+
+  async function play(){
+    if(running) return; running=true;
+    anims.forEach(a=>a.cancel()); anims=[]; cancelAnimationFrame(raf);
+    intro.classList.remove('parked','done'); bike.style.opacity='1'; rope.style.opacity='1'; plate.style.transform='';
+    if(reduce){ finalState(); running=false; return }
+    const L=layout();
+    rig.style.transform=`translate3d(${L.startX}px,${L.top}px,0) scale(${L.sc})`;
+    loop();
+    // 1 · ride in from the left, towing the plate
+    const ride=rig.animate([{transform:`translate3d(${L.startX}px,${L.top}px,0) scale(${L.sc})`},{transform:`translate3d(${L.endX+18}px,${L.top}px,0) scale(${L.sc})`,offset:.9},{transform:`translate3d(${L.endX}px,${L.top}px,0) scale(${L.sc})`}],
+      {duration:2600,easing:'cubic-bezier(.22,.7,.2,1)',fill:'forwards'});
+    const bounce=bike.animate([{transform:'translateY(0) rotate(0)'},{transform:'translateY(-5px) rotate(-.8deg)'},{transform:'translateY(0) rotate(0)'}],{duration:260,iterations:9});
+    const tow=plate.animate([{transform:'translateY(-26px) rotate(-5deg)'},{transform:'translateY(-18px) rotate(-3deg)'},{transform:'translateY(-26px) rotate(-5deg)'}],{duration:520,iterations:5,easing:'ease-in-out'});
+    anims.push(ride,bounce,tow);
+    await ride.finished.catch(()=>{});
+    intro.classList.add('parked');
+    // 2 · the rope lets go; the plate drops into the centre
+    rope.animate([{opacity:1},{opacity:0}],{duration:250,fill:'forwards'});
+    tow.cancel();
+    const drop=plate.animate([{transform:'translateY(-26px) rotate(-5deg)'},{transform:'translateY(8px) rotate(1.5deg)',offset:.55},{transform:'translateY(-3px) rotate(-.4deg)',offset:.78},{transform:'none'}],
+      {duration:900,easing:'cubic-bezier(.3,.9,.3,1)',fill:'forwards'});
+    const lean=bike.animate([{transform:'rotate(0)'},{transform:'rotate(-4deg) translateX(10px)'},{transform:'rotate(0)'}],{duration:600,easing:'ease-out'});
+    anims.push(drop,lean);
+    await drop.finished.catch(()=>{});
+    cancelAnimationFrame(raf);
+    // 3 · Kai stays parked on his bike beside the welcome
+    intro.classList.add('done');
+    running=false;
+  }
+
+  document.getElementById('replay').addEventListener('click',()=>{ running=false; play() });
+  addEventListener('resize',()=>{ if(!running) finalState() });
+  const start=()=>{ (bikeImg.decode?bikeImg.decode():Promise.resolve()).catch(()=>{}).then(()=>document.fonts.ready).then(play) };
+  if(document.readyState==='complete') start(); else addEventListener('load',start);
+
+  // the glass bar appears once the intro scrolls away
+  new IntersectionObserver(([e])=>topbar.classList.toggle('show',!e.isIntersecting),{threshold:.15}).observe(intro);
+
+  // sections rise in as they arrive (visible already if no observer runs)
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.remove('pre'); io.unobserve(e.target) } }),{threshold:.12});
+  document.querySelectorAll('.reveal.pre').forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top<innerHeight) el.classList.remove('pre'); else io.observe(el) });
+
+
+  // ---------- page 2: the screens in 3D (coverflow) ----------
+  const track=document.getElementById('cfTrack'), items=[...track.children], dots=document.getElementById('cfDots');
+  items.forEach(()=>dots.appendChild(document.createElement('i')));
+  function flow(){
+    const mid=track.scrollLeft+track.clientWidth/2; let best=0,bd=1e9;
+    items.forEach((el,i)=>{ const c=el.offsetLeft+el.offsetWidth/2, d=(c-mid)/el.offsetWidth;
+      if(Math.abs(d)<bd){bd=Math.abs(d);best=i}
+      const k=Math.max(-1.6,Math.min(1.6,d));
+      el.style.transform=reduce?'':`rotateY(${-k*28}deg) translateZ(${-Math.abs(k)*90}px) scale(${1-Math.min(.18,Math.abs(k)*.1)})`;
+      el.style.opacity=String(1-Math.min(.55,Math.abs(k)*.3)); });
+    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===best));
+    return best;
+  }
+  track.addEventListener('scroll',()=>requestAnimationFrame(flow),{passive:true});
+  addEventListener('resize',flow);
+  const go=n=>{ const i=Math.max(0,Math.min(items.length-1,n)); const el=items[i]; track.scrollTo({left:el.offsetLeft-(track.clientWidth-el.offsetWidth)/2,behavior:reduce?'auto':'smooth'}) };
+  document.getElementById('cfPrev').addEventListener('click',()=>go(flow()-1));
+  document.getElementById('cfNext').addEventListener('click',()=>go(flow()+1));
+  requestAnimationFrame(()=>{ go(2); flow() });
+
+  // ---------- page 3: lines Kai understands ----------
+  // [what the owner says (Tamil in English letters — spoken in Tamil works the same), what it means, what Kai does]
+  const talk=[
+    {t:'Credit',items:[
+      ['Kumar took 500 on credit','Kumar took ₹500 on credit','Draft: Kumar — ₹500 credit. <b>Confirm</b> saves it.'],
+      ['Logesh owes 2,000 on the 5th next month','Logesh owes 2,000, due the 5th next month','Credit with its due date — <b>5th next month</b>.'],
+      ['I owe ABC Traders 10,000','I owe ABC Traders 10,000','A supplier you owe: a Debit entry; Kai asks the due date.'],
+      ['How much does Kumar owe?','How much does Kumar owe?','Kumar\'s balance, read from your books.']]},
+    {t:'Payments',items:[
+      ['Kumar paid 2,000','Kumar paid 2,000','Payment in from Kumar, set against his oldest dues.'],
+      ['Selvi paid 300 by GPay','Selvi paid 300 by GPay','Paid by GPay — the mode is noted.'],
+      ['The customer has paid','The customer has paid','Kai asks how much, then drafts it.'],
+      ['Ramesh settled his balance','Ramesh settled up','His full balance as one payment, on Confirm.']]},
+    {t:'Stock',items:[
+      ['Received 25 kg of Ponni rice','25 kg of Ponni rice came in','Stock in: <b>+25 kg</b> rice.'],
+      ['Received 2 boxes of Colgate','2 boxes of Colgate came in','Boxes turned into pieces by the product\'s own unit.'],
+      ['Show me low-stock items','What is running low?','Every product at or below its minimum.'],
+      ['How much rice is left?','How much rice is left?','What is left, in its own unit.']]},
+    {t:'Stored Items',items:[
+      ['I kept the key in the cupboard','I kept the key in the cupboard','Kai shows it; on <b>Confirm</b> he keeps: key → almirah.'],
+      ['Where did I keep the key?','Where did I keep the key?','“In the almirah” — with the day you said it.'],
+      ['I lent the drill to Ravi','I lent the drill to Ravi','Kai remembers who has it.'],
+      ['Show me my stored-item list','What all have I kept?','The list of everything you told Kai.']]},
+    {t:'Sales',items:[
+      ['5 haircuts, 2 shaves, 3 facials','5 haircuts, 2 shaves, 3 facials','Each service with its count and Menu price.'],
+      ['One haircut and one shave, paid by GPay','One haircut, one shave, paid by GPay','A Daily Sales Note line, paid by UPI.'],
+      ['How much have I sold so far?','How much have I sold so far?','Today\'s total so far, by service.'],
+      ['That is all for today','That\'s all for today','Kai shows the day and closes it on <b>Day close</b>.']]},
+    {t:'Reminders',items:[
+      ['Remind me to call Kumar tomorrow at 10','Call Kumar tomorrow at 10','An alarm on your phone, tomorrow at 10:00.'],
+      ['Remind me to pay for milk at 6 PM','Remind me at 6 PM to pay for milk','Today at 6:00 PM.'],
+      ['Remind me to call Murugan in 10 minutes','Remind me in 10 minutes to call Murugan','In ten minutes: call Murugan.'],
+      ['What reminders do I have?','What reminders do I have?','Your open reminders.']]},
+  ];
+  const tabs=document.getElementById('tabs'), lines=document.getElementById('lines');
+  function show(i){
+    [...tabs.children].forEach((b,j)=>b.setAttribute('aria-selected',String(i===j)));
+    lines.innerHTML=talk[i].items.map(([said,means,does])=>`<div class="line"><div class="bubble">“${said}”<small>${means}</small></div><div class="reply">${does}</div></div>`).join('');
+  }
+  talk.forEach((c,i)=>{ const b=document.createElement('button'); b.className='tab'; b.type='button'; b.setAttribute('role','tab'); b.textContent=c.t; b.addEventListener('click',()=>show(i)); tabs.appendChild(b) });
+  show(0);
+
+  // ---------- Loan Lab: accessible Coming Soon interaction ----------
+  const loanModal=document.getElementById('loanModal'), openLoan=document.getElementById('openLoan'), closeLoan=document.getElementById('closeLoan'), loanOkay=document.getElementById('loanOkay');
+  let loanOpener=null;
+  function showLoan(){ loanOpener=document.activeElement; loanModal.classList.add('open'); loanModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; closeLoan.focus(); }
+  function hideLoan(){ loanModal.classList.remove('open'); loanModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; if(loanOpener&&loanOpener.focus) loanOpener.focus(); }
+  openLoan.addEventListener('click',showLoan); closeLoan.addEventListener('click',hideLoan); loanOkay.addEventListener('click',hideLoan);
+  loanModal.addEventListener('click',e=>{ if(e.target===loanModal) hideLoan(); });
+  loanModal.addEventListener('pointerdown',e=>{ if(e.target===loanModal) hideLoan(); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&loanModal.classList.contains('open')) hideLoan(); });
+  closeLoan.setAttribute('title','Close this preview');
+
+  // ---------- contact: copy the address ----------
+  document.getElementById('copyMail').addEventListener('click',e=>{
+    const btn=e.currentTarget, text=document.getElementById('mailAddr').textContent;
+    const done=()=>{ btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',1600) };
+    (navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(done).catch(()=>{
+      const r=document.createRange(); r.selectNodeContents(document.getElementById('mailAddr')); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); btn.textContent='Selected'; });
+  });
+
+
+  // ---------- Kai in 3D: the hero Kai and the companion turn to look at the cursor ----------
+  const kai3d=document.getElementById('kai3d');
+  const fine=matchMedia('(pointer:fine)').matches;
+  let px=innerWidth/2, py=innerHeight/2, tick=false;
+  function look(){
+    tick=false;
+    if(kai3d){ const r=kai3d.getBoundingClientRect(); const x=(px-(r.left+r.width/2))/innerWidth, y=(py-(r.top+r.height/2))/innerHeight;
+      kai3d.style.transform=`rotateY(${Math.max(-1,Math.min(1,x*2))*16}deg) rotateX(${-Math.max(-1,Math.min(1,y*2))*9}deg)`; }
+    if(buddyOn && !dragging){ const r=buddy.getBoundingClientRect(); const x=(px-(r.left+r.width/2))/innerWidth, y=(py-(r.top+r.height/2))/innerHeight;
+      buddyImg.style.transform=`rotateY(${Math.max(-1,Math.min(1,x*2))*24}deg) rotateX(${-Math.max(-1,Math.min(1,y*2))*12}deg)`; }
+  }
+  if(!reduce && fine) addEventListener('pointermove',e=>{ px=e.clientX; py=e.clientY; if(!tick){ tick=true; requestAnimationFrame(look) } },{passive:true});
+
+  // ---------- the companion: shows up after the welcome, changes with each page, can be carried anywhere ----------
+  const buddy=document.getElementById('buddy'), buddyImg=document.getElementById('buddyImg'), say=document.getElementById('buddySay');
+  let buddyOn=false, dragging=false, pose='curious', sayTimer=0;
+  const poses={};
+  ['curious','joyful','proud','thoughtful','winking','surprised','point'].forEach(p=>{ const im=new Image(); im.src=`images/kai-${p}.webp`; poses[p]=im });
+  function setPose(p){ if(p===pose) return; pose=p; buddyImg.src=`images/kai-${p}.webp` }
+  function speak(text,ms=4200){ say.textContent=text; say.classList.remove('hide'); clearTimeout(sayTimer); sayTimer=setTimeout(()=>say.classList.add('hide'),ms) }
+  // where he stands, if you moved him before (this browser only)
+  try{ const p=JSON.parse(localStorage.getItem('kaiSpot')||'null'); if(p&&isFinite(p.x)&&isFinite(p.y)) place(p.x*innerWidth,p.y*innerHeight,true) }catch(e){}
+  function place(x,y,moved){
+    const w=buddy.offsetWidth||110, h=buddy.offsetHeight||170;
+    x=Math.max(6,Math.min(innerWidth-w-6,x)); y=Math.max(60,Math.min(innerHeight-h-6,y));
+    buddy.style.left=x+'px'; buddy.style.top=y+'px'; buddy.style.right='auto'; buddy.style.bottom='auto';
+    buddy.classList.toggle('left',x<innerWidth/2); if(moved) buddy.classList.add('moved');
+  }
+  // the page you are on decides his pose and what he says
+  const beats=[
+    ['#features','curious','Six things I do for your shop. Which one first?'],
+    ['#inside','thoughtful','Swipe the phones — that is me at work.'],
+    ['#talk','joyful','Pick a topic and try a sample phrase out loud.'],
+    ['#help','winking','Need help? Write to us — we keep improving Kai.'],
+    ['.band','proud','Ready when you are. Get me on Google Play!'],
+    ['#loan','joyful','A new idea for your shop is on the way. Explore the Loan Lab!'],
+  ];
+  let heroSeen=true, introSeen=true;
+  function updateOn(){ const on=!heroSeen&&!introSeen; if(on!==buddyOn){ buddyOn=on; buddy.classList.toggle('on',on); if(on) speak(beatLine||'Hi! I\'m Kai. Grab me and take me along.') } }
+  let beatLine='';
+  const io2=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.target===intro){ introSeen=e.isIntersecting; updateOn(); return }
+    if(e.target.classList.contains('hero')){ heroSeen=e.isIntersecting; updateOn(); return }
+    if(!e.isIntersecting) return;
+    const b=beats.find(([sel])=>e.target.matches(sel)); if(!b) return;
+    beatLine=b[2]; if(!dragging){ setPose(b[1]); if(buddyOn) speak(b[2]) }
+  }),{threshold:[0,.35]});
+  io2.observe(intro); io2.observe(document.querySelector('.hero'));
+  beats.forEach(([sel])=>{ const el=document.querySelector(sel); if(el) io2.observe(el) });
+
+  // drag him anywhere (mouse or finger); a tap without moving: a wink and a tip
+  const tips=['Speak naturally in English — typed or spoken.','Nothing is saved until you tap Confirm.','Paid by UPI? I can note it in your Daily Cash Note.','Forgot where you stored something? Ask me and I can help you find the note.'];
+  let grab=null, tipAt=0;
+  buddy.addEventListener('pointerdown',e=>{
+    if(!buddyOn) return; e.preventDefault(); buddy.setPointerCapture(e.pointerId);
+    const r=buddy.getBoundingClientRect(); grab={x:e.clientX,y:e.clientY,dx:e.clientX-r.left,dy:e.clientY-r.top,moved:false};
+  });
+  buddy.addEventListener('pointermove',e=>{
+    if(!grab) return;
+    if(!grab.moved && Math.hypot(e.clientX-grab.x,e.clientY-grab.y)<6) return;
+    if(!grab.moved){ grab.moved=true; dragging=true; buddy.classList.add('dragging'); buddy.classList.remove('drop'); setPose('surprised'); speak('Whoa! Put me anywhere you like.',9000); buddyImg.style.transform='' }
+    place(e.clientX-grab.dx,e.clientY-grab.dy,true);
+  });
+  const end=e=>{
+    if(!grab) return; const was=grab; grab=null;
+    if(was.moved){
+      dragging=false; buddy.classList.remove('dragging'); void buddy.offsetWidth; buddy.classList.add('drop');
+      setPose('joyful'); speak('Here is good. I will wait right here!',3000);
+      setTimeout(()=>{ const b=beats.find(([,p,l])=>l===beatLine); if(b) setPose(b[1]) },3200);
+      try{ const r=buddy.getBoundingClientRect(); localStorage.setItem('kaiSpot',JSON.stringify({x:r.left/innerWidth,y:r.top/innerHeight})) }catch(err){}
+    } else {
+      setPose('winking'); speak(tips[tipAt++%tips.length]);
+      setTimeout(()=>{ const b=beats.find(([,p,l])=>l===beatLine); setPose(b?b[1]:'curious') },2400);
+    }
+  };
+  buddy.addEventListener('pointerup',end); buddy.addEventListener('pointercancel',end);
+  addEventListener('resize',()=>{ if(buddy.classList.contains('moved')){ const r=buddy.getBoundingClientRect(); place(r.left,r.top,true) } });
+
+  // Use the cursor elements already in the document. Creating duplicates caused the
+  // visible hand and the pressed hand to be different elements (the click pose looked broken).
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
+    const cursor=document.getElementById('ownerCursor');
+    const ring=document.getElementById('ownerCursorRing');
+    if(cursor && ring){
+      document.body.classList.add('custom-cursor');
+      let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my,cr=0;
+      const move=(e)=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'};
+      addEventListener('pointermove',move,{passive:true});
+      function ringLoop(){rx+=(mx-rx)*.2;ry+=(my-ry)*.2;ring.style.left=rx+'px';ring.style.top=ry+'px';cr=requestAnimationFrame(ringLoop)} ringLoop();
+      document.addEventListener('pointerover',e=>{if(e.target.closest('a,button,[role="button"],input,select,textarea,.tile,.cf-item,.loan-launch,.cash-bundle')){cursor.classList.add('is-hover');ring.classList.add('is-hover')}});
+      document.addEventListener('pointerout',e=>{if(e.target.closest('a,button,[role="button"],input,select,textarea,.tile,.cf-item,.loan-launch,.cash-bundle')){cursor.classList.remove('is-hover');ring.classList.remove('is-hover')}});
+      addEventListener('pagehide',()=>cancelAnimationFrame(cr),{once:true});
+    }
+  }
+
+  // Robot fingertip presses down like a real touch; keep it above modal layers.
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches) {
+    const robot=document.querySelector('.owner-cursor'), orbit=document.querySelector('.owner-cursor-ring');
+    addEventListener('pointerdown',()=>{robot?.classList.add('is-down');orbit?.classList.add('is-down')},{passive:true});
+    addEventListener('pointerup',()=>{robot?.classList.remove('is-down');orbit?.classList.remove('is-down')},{passive:true});
+    addEventListener('pointercancel',()=>{robot?.classList.remove('is-down');orbit?.classList.remove('is-down')},{passive:true});
+  }
+
+  // Tap the cash bundle: Kai lowers it, then a handful of notes flutter down.
+  const cashBundle=document.getElementById('cashBundle');
+  const moneyFallLayer=document.getElementById('moneyFallLayer');
+  const cashStatus=document.getElementById('cashStatus');
+  if(cashBundle && moneyFallLayer) {
+    let cashDropped=false;
+    cashBundle.addEventListener('click',()=>{
+      if(!cashDropped) {
+        cashDropped=true;
+        cashBundle.classList.add('dropped');
+        cashBundle.setAttribute('aria-label','Money bundle placed down. Touch again to make the notes flutter.');
+        if(cashStatus){cashStatus.textContent='Kai set the cash bundle down! Touch the bundle again to release the notes.';cashStatus.classList.add('show');}
+        return;
+      }
+      moneyFallLayer.replaceChildren();
+      for(let n=0;n<12;n++){
+        const note=document.createElement('span'); note.className='falling-note'; note.textContent=n%3===0?'₹':'₹';
+        note.style.left=(36+Math.random()*28)+'%';
+        note.style.setProperty('--dx',((Math.random()-.5)*260)+'px');
+        note.style.setProperty('--dy',(120+Math.random()*200)+'px');
+        note.style.setProperty('--spin',((Math.random()-.5)*720)+'deg');
+        note.style.setProperty('--rot',((Math.random()-.5)*45)+'deg');
+        note.style.animationDelay=(Math.random()*.22)+'s';
+        moneyFallLayer.appendChild(note);
+        note.addEventListener('animationend',()=>note.remove(),{once:true});
+      }
+      if(cashStatus){cashStatus.textContent='The cash is falling!';cashStatus.classList.add('show');}
+      setTimeout(()=>cashStatus?.classList.remove('show'),1900);
+    });
+  }
+
+  // Gentle 3D tilt on feature cards; avoids transforms on touch-first devices.
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce){
+    document.querySelectorAll('.tile').forEach(card=>{
+      card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;card.style.transform=`perspective(850px) rotateX(${(0.5-y)*5}deg) rotateY(${(x-0.5)*6}deg) translateY(-3px)`});
+      card.addEventListener('pointerleave',()=>{card.style.transform=''});
+    });
+  }
+
+})();
+</script>
+
+
+
+<script>
+/* Future interaction layer: intro scene and its bike animation are intentionally untouched. */
+(()=>{
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+ const progress=document.createElement('div');progress.className='future-progress';progress.innerHTML='<span></span>';document.body.appendChild(progress);
+ const progressFill=progress.firstElementChild;
+ const labels=[['#app','Start'],['#features','Features'],['#inside','App'],['#talk','Kai'],['#help','Help'],['#loan','Loan Lab']];
+ const hud=document.createElement('nav');hud.className='future-hud';hud.setAttribute('aria-label','Page chapters');
+ labels.forEach(([sel,label],i)=>{if(!document.querySelector(sel))return;const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',label);b.innerHTML='<span>'+label+'</span>';b.addEventListener('click',()=>document.querySelector(sel).scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}));hud.appendChild(b)});document.body.appendChild(hud);
+ let scheduled=false;
+ function updateScroll(){scheduled=false;const max=document.documentElement.scrollHeight-innerHeight;progressFill.style.width=(max>0?scrollY/max*100:0)+'%';hud.classList.toggle('visible',scrollY>innerHeight*.55);let active=0;labels.forEach(([sel],i)=>{const el=document.querySelector(sel);if(el&&el.getBoundingClientRect().top<innerHeight*.48)active=i});[...hud.children].forEach((b,i)=>b.classList.toggle('active',i===active));}
+ addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(updateScroll)}},{passive:true});addEventListener('resize',updateScroll,{passive:true});updateScroll();
+ if(fine&&!reduce){
+   const spotlight=document.createElement('div');spotlight.className='future-spotlight';document.body.appendChild(spotlight);
+   addEventListener('pointermove',e=>{spotlight.style.setProperty('--mx',e.clientX+'px');spotlight.style.setProperty('--my',e.clientY+'px')},{passive:true});
+   document.addEventListener('pointerdown',e=>{if(e.target.closest('.intro'))return;const r=document.createElement('span');r.className='future-ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.appendChild(r);setTimeout(()=>r.remove(),750);for(let i=0;i<5;i++){const s=document.createElement('i');s.className='future-spark';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';const a=Math.PI*2*i/5,dist=18+Math.random()*18;s.style.setProperty('--dx',Math.cos(a)*dist+'px');s.style.setProperty('--dy',Math.sin(a)*dist+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),650)}const c=document.querySelector('.owner-cursor'),ring=document.querySelector('.owner-cursor-ring');if(c)c.classList.add('is-down');if(ring)ring.classList.add('is-down');setTimeout(()=>{if(c)c.classList.remove('is-down');if(ring)ring.classList.remove('is-down')},140);},{passive:true});
+   document.querySelectorAll('#app .tile').forEach(card=>card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect();card.style.setProperty('--spot-x',(e.clientX-r.left)+'px');card.style.setProperty('--spot-y',(e.clientY-r.top)+'px')}));
+   /* Magnetic micro-motion only for buttons, not the intro. */
+   document.querySelectorAll('#app .btn,#app .loan-launch').forEach(el=>{el.addEventListener('pointermove',e=>{if(e.buttons)return;const r=el.getBoundingClientRect(),dx=(e.clientX-r.left-r.width/2)/r.width,dy=(e.clientY-r.top-r.height/2)/r.height;el.style.translate=(dx*5)+'px '+(dy*4)+'px'});el.addEventListener('pointerleave',()=>{el.style.translate=''})});
+ }
+})();
+</script>
+
+<script>
+// Keep the press ripple separate from the shared cursor movement handler.
+(function(){
+ const fine=window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+ const hand=document.getElementById('ownerCursor');
+ if(!fine||!hand) return;
+ document.addEventListener('pointerdown',e=>{
+   hand.classList.add('is-press');
+   const ripple=document.createElement('span');
+   ripple.className='owner-click-ripple';
+   ripple.style.left=e.clientX+'px';
+   ripple.style.top=e.clientY+'px';
+   document.body.appendChild(ripple);
+   setTimeout(()=>ripple.remove(),700);
+ });
+ addEventListener('pointerup',()=>hand.classList.remove('is-press'));
+ addEventListener('blur',()=>hand.classList.remove('is-press'));
+})();
+</script>
+</body>
+</html>
